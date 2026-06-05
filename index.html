@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UMC · Интерактивный прототип ИИ-бота</title>
+<title>СмайлБот · Интерактивный прототип ИИ-бота</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -12,9 +12,9 @@
 :root{
   --bg:#eef1f6;--card:#fff;
   --border:rgba(15,23,42,.1);--border-hi:rgba(15,23,42,.16);
-  --teal:#0d9488;--blue:#2563eb;--amber:#d97706;--green:#16a34a;--red:#dc2626;
+  --teal:#00a870;--blue:#3d6fd4;--amber:#d97706;--green:#16a34a;--red:#dc2626;
   --w:#0f172a;--g1:#334155;--g2:#64748b;--g3:#e2e8f0;
-  --wa-bg:#e5ddd5;--wa-bub-in:#fff;--wa-bub-out:#dcf8c6;--wa-head:#075e54;--wa-text:#202c33;
+  --max-bg:#eef0fb;--max-bub-in:#fff;--max-bub-out:#e8e4ff;--max-head:#5b21b6;--max-text:#202c33;
 }
 html,body{height:100%}
 body{background:var(--bg);font-family:'Syne',sans-serif;color:var(--w);
@@ -32,8 +32,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:14px}
 .logo-block{display:flex;align-items:center;gap:14px}
 .logo-mark{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--blue));
-  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-family:'Space Mono',monospace;font-size:14px;
-  box-shadow:0 6px 20px rgba(13,148,136,.25)}
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-family:'Space Mono',monospace;font-size:13px;
+  box-shadow:0 6px 20px rgba(0,168,112,.25)}
 .brand{font-size:18px;font-weight:800;letter-spacing:-.01em}
 .brand-sub{font-size:11px;color:var(--g2);font-family:'Space Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
 
@@ -69,8 +69,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 
 .scen{border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;
   transition:all .15s;background:#fff}
-.scen:hover{border-color:var(--teal);background:rgba(13,148,136,.03)}
-.scen.act{border-color:var(--teal);background:rgba(13,148,136,.06);box-shadow:0 0 0 3px rgba(13,148,136,.08)}
+.scen:hover{border-color:var(--teal);background:rgba(0,168,112,.03)}
+.scen.act{border-color:var(--teal);background:rgba(0,168,112,.06);box-shadow:0 0 0 3px rgba(0,168,112,.08)}
 .scen-no{font-size:9px;font-family:'Space Mono',monospace;letter-spacing:.12em;color:var(--g2);
   text-transform:uppercase;margin-bottom:4px}
 .scen-tit{font-size:13px;font-weight:700;margin-bottom:3px;line-height:1.25}
@@ -87,14 +87,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
   box-shadow:0 20px 60px rgba(15,23,42,.25);position:relative}
 .phone-notch{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:120px;height:24px;
   background:#000;border-radius:0 0 16px 16px;z-index:10}
-.screen{width:100%;height:100%;background:var(--wa-bg);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.screen{width:100%;height:100%;background:var(--max-bg);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;position:relative}
 
-.screen.wa{background-color:#e5ddd5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23d4ccc4' fill-opacity='.4'%3E%3Cpath d='M30 10l3.09 6.26L40 17.27l-5 4.87 1.18 6.88L30 25.77l-6.18 3.25L25 22.14l-5-4.87 6.91-1.01z'/%3E%3C/g%3E%3C/svg%3E")}
+.screen.max{background-color:#eef0fb;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23d8d4f0' fill-opacity='.45'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/svg%3E")}
 .screen.web{background:#f8f9fa}
 .screen.tg{background:#e7ebf0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23c9d0d8' fill-opacity='.5'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/svg%3E")}
 
-.chat-head{background:var(--wa-head);color:#fff;padding:36px 14px 10px;display:flex;align-items:center;gap:10px}
-.screen.web .chat-head{background:linear-gradient(135deg,var(--teal),#0c7d72);color:#fff}
+.chat-head{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:36px 14px 10px;display:flex;align-items:center;gap:10px}
+.screen.max .chat-head{background:linear-gradient(135deg,#4f46e5,#7c3aed)}
+.screen.web .chat-head{background:linear-gradient(135deg,var(--teal),#0a7a55);color:#fff}
 .screen.tg .chat-head{background:#5288c1;color:#fff}
 .avatar{width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;
   font-weight:800;color:var(--teal);font-size:14px;flex-shrink:0}
@@ -113,12 +114,14 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .chat-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px}
 
 .msg{max-width:80%;padding:8px 11px 5px;border-radius:8px;font-size:13.5px;line-height:1.4;
-  word-wrap:break-word;position:relative;color:var(--wa-text);font-family:-apple-system,system-ui,sans-serif;
+  word-wrap:break-word;position:relative;color:var(--max-text);font-family:-apple-system,system-ui,sans-serif;
   display:flex;flex-direction:column}
-.msg.in{background:var(--wa-bub-in);align-self:flex-start;border-top-left-radius:2px;
+.msg.in{background:var(--max-bub-in);align-self:flex-start;border-top-left-radius:2px;
   box-shadow:0 1px 1px rgba(0,0,0,.07)}
-.msg.out{background:var(--wa-bub-out);align-self:flex-end;border-top-right-radius:2px;
+.msg.out{background:var(--max-bub-out);align-self:flex-end;border-top-right-radius:2px;
   box-shadow:0 1px 1px rgba(0,0,0,.07)}
+.screen.max .msg.in{background:#fff}
+.screen.max .msg.out{background:#e8e4ff}
 .screen.tg .msg.in{background:#fff}
 .screen.tg .msg.out{background:#effdde}
 .screen.web .msg.in{background:#fff;border:1px solid var(--border)}
@@ -133,9 +136,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
   border-radius:18px;cursor:pointer;font-family:-apple-system,system-ui,sans-serif;font-weight:600;
   transition:all .12s}
 .qr:hover{background:var(--teal);color:#fff}
-.screen.web .qr{background:rgba(13,148,136,.08)}
+.screen.web .qr{background:rgba(0,168,112,.08)}
 
-.typing{align-self:flex-start;background:var(--wa-bub-in);padding:10px 14px;border-radius:8px;
+.typing{align-self:flex-start;background:var(--max-bub-in);padding:10px 14px;border-radius:8px;
   border-top-left-radius:2px;display:flex;gap:3px;box-shadow:0 1px 1px rgba(0,0,0,.07)}
 .typing span{width:6px;height:6px;background:#999;border-radius:50%;animation:bnc 1.2s infinite ease-in-out}
 .typing span:nth-child(2){animation-delay:.15s}
@@ -144,16 +147,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 
 .card-msg{background:#fff;border-radius:8px;padding:0;overflow:visible;border-top-left-radius:2px;
   box-shadow:0 1px 1px rgba(0,0,0,.07);max-width:88%;align-self:flex-start;flex-shrink:0;min-width:0}
-.card-msg-hd{background:linear-gradient(135deg,var(--teal),#0c7d72);color:#fff;padding:10px 12px;
+.card-msg-hd{background:linear-gradient(135deg,var(--teal),var(--blue));color:#fff;padding:10px 12px;
   font-size:12px;font-weight:700;font-family:-apple-system,system-ui,sans-serif;display:flex;align-items:center;gap:6px;line-height:1.35;min-height:38px}
-.card-msg-body{padding:11px 12px;font-size:13px;color:var(--wa-text);font-family:-apple-system,system-ui,sans-serif;line-height:1.45}
+.card-msg-body{padding:11px 12px;font-size:13px;color:var(--max-text);font-family:-apple-system,system-ui,sans-serif;line-height:1.45}
 .card-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed #eee;line-height:1.35}
 .card-row span{flex:1;min-width:0}
 .card-row b{color:var(--w);text-align:right;flex-shrink:0;max-width:58%}
 .card-row:last-child{border-bottom:none}
 
 .slot-pick{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;width:100%}
-.slot{background:rgba(13,148,136,.08);border:1px solid var(--teal);color:var(--teal);font-size:12px;padding:10px 8px;min-height:40px;
+.slot{background:rgba(0,168,112,.08);border:1px solid var(--teal);color:var(--teal);font-size:12px;padding:10px 8px;min-height:40px;
   border-radius:6px;text-align:center;cursor:pointer;font-family:-apple-system,system-ui,sans-serif;font-weight:600;
   display:flex;align-items:center;justify-content:center;line-height:1.25;word-break:break-word}
 .slot:hover{background:var(--teal);color:#fff}
@@ -186,7 +189,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 
 .dash-head{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 14px}
 .dash-title{font-size:13px;font-weight:800;color:var(--w);display:flex;align-items:center;gap:7px;letter-spacing:-.01em}
-.dash-title .ddot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.18)}
+.dash-title .ddot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(0,168,112,.18)}
 .dash-sub{font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.1em;color:var(--g2);text-transform:uppercase;margin-top:4px}
 .period-switch{display:flex;background:var(--g3);border-radius:8px;padding:3px;gap:2px;margin-top:11px}
 .period-btn{flex:1;border:none;background:transparent;padding:6px 6px;border-radius:6px;cursor:pointer;
@@ -195,8 +198,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .period-btn.on{background:#fff;color:var(--teal);box-shadow:0 1px 3px rgba(0,0,0,.08)}
 
 .live-list,.kb-stats{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
-.kb-stats{background:linear-gradient(135deg,rgba(13,148,136,.06),rgba(37,99,235,.05));
-  border:1px solid rgba(13,148,136,.18)}
+.kb-stats{background:linear-gradient(135deg,rgba(0,168,112,.06),rgba(61,111,212,.05));
+  border:1px solid rgba(0,168,112,.18)}
 .live-list h4,.kb-stats h4{font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.12em;
   color:var(--g2);text-transform:uppercase;margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px}
 .kb-stats h4{color:var(--teal)}
@@ -240,9 +243,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 <div class="wrap">
   <div class="head">
     <div class="logo-block">
-      <div class="logo-mark">UMC</div>
+      <div class="logo-mark">SB</div>
       <div>
-        <div class="brand">UMC</div>
+        <div class="brand">Смайл<span style="color:var(--teal)">Бот</span></div>
         <div class="brand-sub">Интерактивный прототип ИИ-бота</div>
       </div>
     </div>
@@ -256,7 +259,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
     <div class="bar-l">
       <span class="bar-lbl">Канал</span>
       <div class="channel-switch">
-        <button class="ch-btn on" data-ch="wa">WhatsApp</button>
+        <button class="ch-btn on" data-ch="max">MAX</button>
         <button class="ch-btn" data-ch="tg">Telegram</button>
         <button class="ch-btn" data-ch="web">Виджет</button>
       </div>
@@ -273,7 +276,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
       <h3>Сценарии (8 шт.)</h3>
       <div class="scen act" data-scen="booking">
         <div class="scen-no">A · Запись</div>
-        <div class="scen-tit">Запись к GP</div>
+        <div class="scen-tit">Запись к терапевту</div>
         <div class="scen-tag">Свободные слоты на завтра + подтверждение</div>
       </div>
       <div class="scen" data-scen="price">
@@ -321,12 +324,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
     <div class="phone-wrap">
       <div class="phone">
         <div class="phone-notch"></div>
-        <div class="screen wa" id="screen">
+        <div class="screen max" id="screen">
           <div class="chat-head">
-            <div class="avatar">U</div>
+            <div class="avatar">S</div>
             <div class="chat-meta">
-              <div class="chat-name" id="chatName">UMC · WhatsApp</div>
-              <div class="chat-stat" id="chatStat">online · ИИ-ассистент</div>
+              <div class="chat-name" id="chatName">СмайлБот · MAX</div>
+              <div class="chat-stat" id="chatStat">online · ИИ-помощник</div>
             </div>
             <div class="chat-actions">⋮</div>
           </div>
@@ -375,7 +378,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 
       <div class="kb-stats">
         <h4>База знаний · 5 направлений</h4>
-        <div class="kb-row"><span>GP / Семейный врач</span><b>247 вопросов</b></div>
+        <div class="kb-row"><span>Терапевт / семейный врач</span><b>247 вопросов</b></div>
         <div class="kb-row"><span>Педиатрия</span><b>189 вопросов</b></div>
         <div class="kb-row"><span>Гинекология</span><b>134 вопроса</b></div>
         <div class="kb-row"><span>ЛОР</span><b>98 вопросов</b></div>
@@ -386,7 +389,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
         <h4><span class="live-dot"></span>Живая лента</h4>
         <div class="live-item">
           <span class="live-time">11:42</span>
-          <span class="live-text">Запись к GP</span>
+          <span class="live-text">Запись к терапевту</span>
           <span class="live-flag ok">OK</span>
         </div>
         <div class="live-item">
@@ -413,7 +416,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
     </div>
   </div>
 
-  <div class="foot">Прототип · Данные демонстрационные · Готов к адаптации под систему записи и базу знаний UMC</div>
+  <div class="foot">СмайлБот · Прототип · Данные демонстрационные · Готов к адаптации под систему записи и базу знаний клиники</div>
 </div>
 
 <script>
@@ -421,15 +424,15 @@ const SCENARIOS = {
   booking: {
     ru: [
       {who:'user', text:'Добрый день, хочу записаться к терапевту на завтра'},
-      {who:'bot', text:'Здравствуйте! 👋 Я ассистент UMC. Подберу свободные слоты к GP на завтра, {date}.'},
-      {who:'bot', card:'slots', title:'Доступные слоты · GP', slots:['09:30','11:00','14:15','16:45']},
+      {who:'bot', text:'Здравствуйте! 👋 Я ИИ-помощник СмайлБот. Подберу свободные слоты к терапевту на завтра, {date}.'},
+      {who:'bot', card:'slots', title:'Доступные слоты · терапевт', slots:['09:30','11:00','14:15','16:45']},
       {who:'user', text:'14:15'},
       {who:'bot', text:'Уточните, пожалуйста, ваше имя и фамилию для записи.'},
       {who:'user', text:'Анна Соколова'},
       {who:'bot', text:'Спасибо, Анна. Можете указать номер телефона для подтверждения?'},
       {who:'user', text:'+351 912 345 678'},
       {who:'bot', card:'confirm', title:'Запись подтверждена ✓', rows:[
-        ['Врач','Dra. Sofia Pereira · GP'],['Дата','завтра, 14:15'],['Адрес','Av. da Liberdade 123'],['Длительность','30 мин']
+        ['Врач','Dr. Иванова · терапевт'],['Дата','завтра, 14:15'],['Адрес','ул. Декабристов, 3, Ногинск'],['Длительность','30 мин']
       ]},
       {who:'bot', text:'Отправлю напоминание за 24 часа и за 2 часа до приёма. До встречи!'}
     ],
@@ -506,7 +509,7 @@ const SCENARIOS = {
       {who:'bot', text:'Отлично! На чьё имя записываем?'},
       {who:'user', text:'Игорь Лебедев'},
       {who:'bot', card:'confirm', title:'Запись на УЗИ подтверждена ✓', rows:[
-        ['Исследование','УЗИ брюшной полости'],['Дата','четверг, 09:00'],['Адрес','Av. da Liberdade 123'],['Подготовка','натощак · памятка выше']
+        ['Исследование','УЗИ брюшной полости'],['Дата','четверг, 09:00'],['Адрес','ул. Декабристов, 3, Ногинск'],['Подготовка','натощак · памятка выше']
       ]},
       {who:'bot', text:'Памятку и напоминание пришлю в этот чат за день до визита. Всё оформил - администратора беспокоить не нужно. Хорошего дня! 🙌'}
     ],
@@ -556,7 +559,7 @@ const SCENARIOS = {
   insurance: {
     ru: [
       {who:'user', text:'Покрывает ли Médis анализы крови?'},
-      {who:'bot', text:'Сейчас проверю по правилам Médis для UMC...'},
+      {who:'bot', text:'Сейчас проверю покрытие по правилам вашей страховки...'},
       {who:'bot', card:'ins', title:'Médis · покрытие', rows:[
         ['Общий анализ крови','✓ 80% покрытия'],
         ['Биохимия','✓ 80% покрытия'],
@@ -564,7 +567,7 @@ const SCENARIOS = {
         ['Соплатёж пациента','€ 5-15 в зависимости от теста'],
         ['Направление врача','требуется']
       ]},
-      {who:'bot', text:'Если хотите - запишу к GP, чтобы получить направление, и забронирую лабораторию на тот же день.'},
+      {who:'bot', text:'Если хотите - запишу к терапевту, чтобы получить направление, и забронирую лабораторию на тот же день.'},
       {who:'bot', quick:['Да, всё вместе','Только лабораторию','У меня уже есть направление']}
     ],
     en: [
@@ -598,7 +601,7 @@ const SCENARIOS = {
     ru: [
       {who:'bot', text:'Здравствуйте, Анна! 👋'},
       {who:'bot', card:'reminder', title:'Напоминание · завтра', rows:[
-        ['Приём','Dra. Sofia Pereira · GP'],['Время','14:15'],['Адрес','Av. da Liberdade 123'],['Парковка','подземная, въезд с Rua Rosa Araújo']
+        ['Приём','Dr. Иванова · терапевт'],['Время','14:15'],['Адрес','ул. Декабристов, 3, Ногинск'],['Парковка','есть на территории клиники']
       ]},
       {who:'bot', text:'Подтверждаете запись или нужно перенести?'},
       {who:'bot', quick:['✓ Подтверждаю','Перенести','Отменить']},
@@ -632,11 +635,11 @@ const SCENARIOS = {
   faq: {
     ru: [
       {who:'user', text:'Где вы находитесь и как добраться?'},
-      {who:'bot', text:'UMC - Av. da Liberdade 123. Метро Avenida (синяя линия), 2 минуты пешком. Есть подземная парковка с въездом с Rua Rosa Araújo.'},
+      {who:'bot', text:'Клиника на ул. Декабристов, 3, Ногинск. Работаем Пн-Пт 08:00-20:00, Сб 09:00-15:00. Есть парковка на территории.'},
       {who:'user', text:'А какие у вас часы работы?'},
       {who:'bot', text:'Клиника принимает Пн-Пт 08:00-20:00, Сб 09:00-15:00. Я, ассистент, на связи и помогаю с записью 24/7.'},
       {who:'user', text:'Нужно ли направление, чтобы попасть к специалисту?'},
-      {who:'bot', text:'К большинству специалистов можно записаться напрямую, без направления. Для части анализов по страховке направление от GP нужно - подскажу по вашему конкретному случаю.'},
+      {who:'bot', text:'К большинству специалистов можно записаться напрямую, без направления. Для части анализов по страховке направление от терапевта нужно - подскажу по вашему конкретному случаю.'},
       {who:'bot', text:'Могу подсказать по ценам и страховке или сразу записать на приём. Что для вас удобнее?'},
       {who:'bot', quick:['Записаться на приём','Узнать цены','Проверить страховку']}
     ],
@@ -667,7 +670,7 @@ const SCENARIOS = {
   },
   reactivation: {
     ru: [
-      {who:'bot', text:'Добрый день, Мария! 👋 Это ассистент UMC.'},
+      {who:'bot', text:'Добрый день, Мария! 👋 Это ИИ-помощник СмайлБот.'},
       {who:'bot', text:'Вижу, что вы были у нас на приёме у кардиолога около года назад. Самое время для планового контроля - так проще не пропустить важное.'},
       {who:'bot', card:'react', title:'Рекомендованный контроль', rows:[
         ['Последний визит','~12 месяцев назад'],['Специалист','Кардиолог'],['Рекомендация','ежегодный осмотр + ЭКГ'],['Ваша скидка','-15% на контрольный приём']
@@ -719,7 +722,7 @@ const SCENARIOS = {
     ru: [
       {who:'bot', text:'Здравствуйте, Анна! Спасибо, что были сегодня у нас 🙏 Вот итоги вашего визита:'},
       {who:'bot', card:'visit', title:'Итоги визита · сегодня', rows:[
-        ['Врач','Dra. Sofia Pereira · GP'],['Заключение','ОРВИ, лёгкое течение'],['Процедуры','осмотр, экспресс-тест']
+        ['Врач','Dr. Иванова · терапевт'],['Заключение','ОРВИ, лёгкое течение'],['Процедуры','осмотр, экспресс-тест']
       ]},
       {who:'bot', card:'meds', title:'Назначения', rows:[
         ['Парацетамол 500 мг','при температуре, до 3 раз в день'],['Тёплое питьё и покой','3-5 дней'],['Спрей для горла','2 раза в день, 5 дней']
@@ -728,10 +731,10 @@ const SCENARIOS = {
       {who:'bot', text:'Если через 5-7 дней не станет легче - стоит показаться повторно. Записать контрольный приём?'},
       {who:'user', text:'Да, запишите'},
       {who:'bot', text:'Вот свободные слоты на контроль через неделю:'},
-      {who:'bot', card:'slots', title:'Контроль · GP', slots:['Пн 12:00','Ср 15:30','Чт 10:45','Пт 14:00']},
+      {who:'bot', card:'slots', title:'Контроль · терапевт', slots:['Пн 12:00','Ср 15:30','Чт 10:45','Пт 14:00']},
       {who:'user', text:'Ср 15:30'},
       {who:'bot', card:'confirm', title:'Контроль записан ✓', rows:[
-        ['Врач','Dra. Sofia Pereira · GP'],['Дата','среда, 15:30'],['Тип','повторный приём'],['Стоимость','€ 75']
+        ['Врач','Dr. Иванова · терапевт'],['Дата','среда, 15:30'],['Тип','повторный приём'],['Стоимость','2 400 ₽']
       ]},
       {who:'bot', text:'Отлично! Все материалы визита и назначения остаются в этом чате. Выздоравливайте! 🌿'}
     ],
@@ -777,19 +780,19 @@ const SCENARIOS = {
 };
 
 const CHANNEL_LABELS = {
-  ru: {wa:['UMC · WhatsApp','online · ИИ-ассистент'],
-       tg:['UMC · Telegram','bot · ИИ-ассистент'],
-       web:['UMC · Чат на сайте','онлайн · обычно отвечает за 5 сек']},
-  en: {wa:['UMC Lisbon · WhatsApp','online · AI assistant'],
-       tg:['UMC Lisbon · Telegram','bot · AI assistant'],
-       web:['UMC Lisbon · Website chat','online · usually replies in 5 sec']},
-  pt: {wa:['UMC Lisbon · WhatsApp','online · assistente IA'],
-       tg:['UMC Lisbon · Telegram','bot · assistente IA'],
-       web:['UMC Lisbon · Chat do site','online · responde em 5 seg']}
+  ru: {max:['СмайлБот · MAX','online · ИИ-помощник'],
+       tg:['СмайлБот · Telegram','bot · ИИ-помощник'],
+       web:['СмайлБот · Чат на сайте','онлайн · обычно отвечает за 5 сек']},
+  en: {max:['SmileBot · MAX','online · AI assistant'],
+       tg:['SmileBot · Telegram','bot · AI assistant'],
+       web:['SmileBot · Website chat','online · usually replies in 5 sec']},
+  pt: {max:['SmileBot · MAX','online · assistente IA'],
+       tg:['SmileBot · Telegram','bot · assistente IA'],
+       web:['SmileBot · Chat do site','online · responde em 5 seg']}
 };
 
 const WELCOME = {
-  ru:'Здравствуйте! 👋 Я ИИ-ассистент UMC. Чем могу помочь? Выберите тему ниже или просто напишите свой вопрос.',
+  ru:'Здравствуйте! 👋 Я ИИ-помощник СмайлБот. Чем могу помочь? Выберите тему ниже или просто напишите свой вопрос.',
   en:'Hello! 👋 I am the UMC Lisbon AI assistant. How can I help? Pick a topic below or just type your question.',
   pt:'Olá! 👋 Sou o assistente IA da UMC Lisbon. Como posso ajudar? Escolha um tema abaixo ou escreva a sua pergunta.'
 };
@@ -805,7 +808,7 @@ const MENU_CAP = {
   pt:'Menu · toque num tema ou escreva a sua pergunta'
 };
 
-const state = { lang:'ru', channel:'wa', scenario:'booking', mode:'idle', playing:false, awaiting:false, botBusy:false, turn:0, seq:null, idx:0, period:'today', metrics:{dial:147, book:23} };
+const state = { lang:'ru', channel:'max', scenario:'booking', mode:'idle', playing:false, awaiting:false, botBusy:false, turn:0, seq:null, idx:0, period:'today', metrics:{dial:147, book:23} };
 
 const PERIOD_DATA = {
   today: {dial:147,  dialSub:'+34% к прошлой неделе',  dialBar:68, book:23,  bookSub:'из них 12 в нерабочее время',  bookBar:42, lbl:'Диалогов · сегодня', head:'Данные за сегодня · демо'},
@@ -1141,7 +1144,7 @@ function fakeReply(t){
   const lc = t.toLowerCase();
   const has = (...ws) => ws.some(w => lc.includes(w));
   if(has('запис','book','marc'))
-    return {ru:'Конечно! К какому специалисту? GP, педиатр, гинеколог, ЛОР или диагностика?',
+    return {ru:'Конечно! К какому специалисту? Терапевт, педиатр, гинеколог, ЛОР или диагностика?',
       en:'Of course! Which specialist? GP, paediatrician, gynaecologist, ENT or diagnostics?',
       pt:'Claro! Que especialista? GP, pediatra, ginecologista, ORL ou diagnóstico?'}[L];
   if(has('цен','price','preço','custa','стоит'))
@@ -1153,7 +1156,7 @@ function fakeReply(t){
       en:'Clinic hours: Mon-Fri 08:00-20:00, Sat 09:00-15:00. The bot is available 24/7.',
       pt:'Horário: Seg-Sex 08:00-20:00, Sáb 09:00-15:00. O bot está disponível 24/7.'}[L];
   if(has('адрес','address','morada','где'))
-    return {ru:'UMC - Av. da Liberdade 123. Метро Avenida (синяя линия), 2 мин пешком.',
+    return {ru:'Клиника на ул. Декабристов, 3, Ногинск. Парковка на территории. Работаем Пн-Пт 08:00-20:00.',
       en:'UMC Lisbon · Av. da Liberdade 123, Lisbon. Metro Avenida (blue line), 2 min walk.',
       pt:'UMC Lisbon · Av. da Liberdade 123, Lisboa. Metro Avenida (linha azul), a 2 min a pé.'}[L];
   return {ru:'Понял ваш вопрос. Передам администратору - он ответит в течение часа. Или попробуйте один из сценариев слева.',
