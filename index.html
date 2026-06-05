@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UMC Лиссабон · Интерактивный прототип ИИ-бота</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#eef1f6;--card:#fff;
+  --border:rgba(15,23,42,.1);--border-hi:rgba(15,23,42,.16);
+  --teal:#0d9488;--blue:#2563eb;--amber:#d97706;--green:#16a34a;--red:#dc2626;
+  --w:#0f172a;--g1:#334155;--g2:#64748b;--g3:#e2e8f0;
+  --wa-bg:#e5ddd5;--wa-bub-in:#fff;--wa-bub-out:#dcf8c6;--wa-head:#075e54;--wa-text:#202c33;
+}
+html,body{height:100%}
+body{background:var(--bg);font-family:'Syne',sans-serif;color:var(--w);
+  -webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.35;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")}
+
+.orb{position:fixed;border-radius:50%;filter:blur(100px);opacity:.25;pointer-events:none;z-index:0}
+.o1{width:600px;height:600px;background:var(--teal);top:-200px;right:-200px}
+.o2{width:500px;height:500px;background:var(--blue);bottom:-200px;left:-200px}
+
+.wrap{position:relative;z-index:2;max-width:1320px;margin:0 auto;padding:32px 28px 60px}
+
+.head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:14px}
+.logo-block{display:flex;align-items:center;gap:14px}
+.logo-mark{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--blue));
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-family:'Space Mono',monospace;font-size:14px;
+  box-shadow:0 6px 20px rgba(13,148,136,.25)}
+.brand{font-size:18px;font-weight:800;letter-spacing:-.01em}
+.brand-sub{font-size:11px;color:var(--g2);font-family:'Space Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+
+.crumbs{display:flex;gap:6px;align-items:center;font-size:11px;font-family:'Space Mono',monospace;
+  color:var(--g2);letter-spacing:.1em;text-transform:uppercase}
+.crumbs span.act{color:var(--teal);font-weight:700}
+
+.bar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 18px;
+  margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.bar-l{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.bar-lbl{font-size:11px;font-family:'Space Mono',monospace;letter-spacing:.12em;color:var(--g2);text-transform:uppercase}
+
+.lang-switch,.channel-switch{display:flex;background:var(--g3);border-radius:8px;padding:3px;gap:2px}
+.lang-btn,.ch-btn{border:none;background:transparent;padding:6px 12px;border-radius:6px;cursor:pointer;
+  font-size:12px;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:.05em;color:var(--g1);
+  transition:all .15s;display:flex;align-items:center;gap:5px}
+.lang-btn.on{background:#fff;color:var(--teal);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.ch-btn.on{background:#fff;color:var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+.bar-r{display:flex;gap:8px}
+.btn{border:1px solid var(--border);background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;
+  font-size:12px;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:.06em;color:var(--g1);
+  transition:all .15s;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--teal);color:var(--teal)}
+.btn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+.btn.primary:hover{background:#0c8278;color:#fff}
+
+.grid{display:grid;grid-template-columns:280px 1fr 320px;gap:20px;align-items:start}
+
+.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+.panel h3{font-size:11px;font-family:'Space Mono',monospace;letter-spacing:.12em;color:var(--g2);
+  text-transform:uppercase;margin-bottom:14px;font-weight:700}
+
+.scen{border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;
+  transition:all .15s;background:#fff}
+.scen:hover{border-color:var(--teal);background:rgba(13,148,136,.03)}
+.scen.act{border-color:var(--teal);background:rgba(13,148,136,.06);box-shadow:0 0 0 3px rgba(13,148,136,.08)}
+.scen-no{font-size:9px;font-family:'Space Mono',monospace;letter-spacing:.12em;color:var(--g2);
+  text-transform:uppercase;margin-bottom:4px}
+.scen-tit{font-size:13px;font-weight:700;margin-bottom:3px;line-height:1.25}
+.scen-tag{font-size:11px;color:var(--g2);line-height:1.4}
+
+.hint{margin-top:18px;padding:12px;background:rgba(37,99,235,.05);
+  border:1px solid rgba(37,99,235,.18);border-radius:10px}
+.hint-l{font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.12em;
+  color:var(--blue);text-transform:uppercase;margin-bottom:6px;font-weight:700}
+.hint-t{font-size:12px;color:var(--g1);line-height:1.5}
+
+.phone-wrap{display:flex;justify-content:center;align-items:flex-start}
+.phone{width:100%;max-width:400px;height:680px;background:#000;border-radius:36px;padding:10px;
+  box-shadow:0 20px 60px rgba(15,23,42,.25);position:relative}
+.phone-notch{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:120px;height:24px;
+  background:#000;border-radius:0 0 16px 16px;z-index:10}
+.screen{width:100%;height:100%;background:var(--wa-bg);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+
+.screen.wa{background-color:#e5ddd5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23d4ccc4' fill-opacity='.4'%3E%3Cpath d='M30 10l3.09 6.26L40 17.27l-5 4.87 1.18 6.88L30 25.77l-6.18 3.25L25 22.14l-5-4.87 6.91-1.01z'/%3E%3C/g%3E%3C/svg%3E")}
+.screen.web{background:#f8f9fa}
+.screen.tg{background:#e7ebf0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23c9d0d8' fill-opacity='.5'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/svg%3E")}
+
+.chat-head{background:var(--wa-head);color:#fff;padding:36px 14px 10px;display:flex;align-items:center;gap:10px}
+.screen.web .chat-head{background:linear-gradient(135deg,var(--teal),#0c7d72);color:#fff}
+.screen.tg .chat-head{background:#5288c1;color:#fff}
+.avatar{width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;
+  font-weight:800;color:var(--teal);font-size:14px;flex-shrink:0}
+.chat-meta{flex:1;min-width:0}
+.chat-name{font-size:14px;font-weight:700;line-height:1.2}
+.chat-stat{font-size:11px;opacity:.85;font-family:'Space Mono',monospace}
+.chat-actions{display:flex;gap:14px;opacity:.85;font-size:18px}
+
+.chat-body{flex:1;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:8px}
+.chat-body::-webkit-scrollbar{width:6px}
+.chat-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px}
+
+.msg{max-width:80%;padding:8px 11px 5px;border-radius:8px;font-size:13.5px;line-height:1.4;
+  word-wrap:break-word;position:relative;color:var(--wa-text);font-family:-apple-system,system-ui,sans-serif;
+  display:flex;flex-direction:column}
+.msg.in{background:var(--wa-bub-in);align-self:flex-start;border-top-left-radius:2px;
+  box-shadow:0 1px 1px rgba(0,0,0,.07)}
+.msg.out{background:var(--wa-bub-out);align-self:flex-end;border-top-right-radius:2px;
+  box-shadow:0 1px 1px rgba(0,0,0,.07)}
+.screen.tg .msg.in{background:#fff}
+.screen.tg .msg.out{background:#effdde}
+.screen.web .msg.in{background:#fff;border:1px solid var(--border)}
+.screen.web .msg.out{background:var(--teal);color:#fff}
+.msg-body{white-space:pre-wrap}
+.msg-time{font-size:9.5px;color:#667781;align-self:flex-end;margin-top:4px;font-family:-apple-system,system-ui,sans-serif;display:flex;align-items:center;gap:3px}
+.screen.web .msg.out .msg-time{color:rgba(255,255,255,.7)}
+.msg-ck{color:#53bdeb;font-size:11px}
+
+.quick-row{align-self:flex-start;max-width:90%;display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.qr{background:#fff;border:1px solid var(--teal);color:var(--teal);font-size:12px;padding:6px 12px;
+  border-radius:18px;cursor:pointer;font-family:-apple-system,system-ui,sans-serif;font-weight:600;
+  transition:all .12s}
+.qr:hover{background:var(--teal);color:#fff}
+.screen.web .qr{background:rgba(13,148,136,.08)}
+
+.typing{align-self:flex-start;background:var(--wa-bub-in);padding:10px 14px;border-radius:8px;
+  border-top-left-radius:2px;display:flex;gap:3px;box-shadow:0 1px 1px rgba(0,0,0,.07)}
+.typing span{width:6px;height:6px;background:#999;border-radius:50%;animation:bnc 1.2s infinite ease-in-out}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bnc{0%,80%,100%{transform:scale(.6);opacity:.5}40%{transform:scale(1);opacity:1}}
+
+.card-msg{background:#fff;border-radius:8px;padding:0;overflow:hidden;border-top-left-radius:2px;
+  box-shadow:0 1px 1px rgba(0,0,0,.07);max-width:88%;align-self:flex-start}
+.card-msg-hd{background:linear-gradient(135deg,var(--teal),#0c7d72);color:#fff;padding:10px 12px;
+  font-size:12px;font-weight:700;font-family:-apple-system,system-ui,sans-serif;display:flex;align-items:center;gap:6px}
+.card-msg-body{padding:11px 12px;font-size:13px;color:var(--wa-text);font-family:-apple-system,system-ui,sans-serif;line-height:1.45}
+.card-row{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px dashed #eee}
+.card-row:last-child{border-bottom:none}
+.card-row b{color:var(--w);text-align:right}
+
+.slot-pick{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.slot{background:rgba(13,148,136,.08);border:1px solid var(--teal);color:var(--teal);font-size:12px;padding:7px;
+  border-radius:6px;text-align:center;cursor:pointer;font-family:-apple-system,system-ui,sans-serif;font-weight:600}
+.slot:hover{background:var(--teal);color:#fff}
+.slot-pick.used .slot{opacity:.45;pointer-events:none}
+.quick-row.used .qr{opacity:.45;pointer-events:none}
+.sugg{align-self:flex-start;max-width:92%;margin-top:2px}
+.sugg-cap{font-size:10.5px;color:#8a9aa6;margin:0 0 4px 2px;font-weight:600;letter-spacing:.2px}
+.sugg .qr{background:#eafaf6;border-style:dashed}
+
+.chat-input{background:#f0f2f5;padding:8px;display:flex;align-items:center;gap:8px}
+.screen.tg .chat-input{background:#fff;border-top:1px solid #e7ebf0}
+.screen.web .chat-input{background:#fff;border-top:1px solid var(--border)}
+.chat-input input{flex:1;border:none;outline:none;background:#fff;padding:9px 14px;border-radius:20px;
+  font-size:13.5px;font-family:-apple-system,system-ui,sans-serif;color:var(--w)}
+.send-b{width:36px;height:36px;border:none;border-radius:50%;background:var(--teal);color:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:16px}
+
+.dash{display:flex;flex-direction:column;gap:14px}
+.metric{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.metric-lbl{font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.12em;color:var(--g2);
+  text-transform:uppercase;margin-bottom:6px}
+.metric-val{font-size:24px;font-weight:800;line-height:1;letter-spacing:-.02em}
+.metric-val.teal{color:var(--teal)}
+.metric-val.blue{color:var(--blue)}
+.metric-val.green{color:var(--green)}
+.metric-val.amber{color:var(--amber)}
+.metric-sub{font-size:11px;color:var(--g2);margin-top:4px}
+.metric-bar{height:4px;background:var(--g3);border-radius:2px;margin-top:8px;overflow:hidden}
+.metric-bar-fill{height:100%;background:var(--teal);border-radius:2px;transition:width .8s}
+
+.dash-head{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 14px}
+.dash-title{font-size:13px;font-weight:800;color:var(--w);display:flex;align-items:center;gap:7px;letter-spacing:-.01em}
+.dash-title .ddot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.18)}
+.dash-sub{font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.1em;color:var(--g2);text-transform:uppercase;margin-top:4px}
+.period-switch{display:flex;background:var(--g3);border-radius:8px;padding:3px;gap:2px;margin-top:11px}
+.period-btn{flex:1;border:none;background:transparent;padding:6px 6px;border-radius:6px;cursor:pointer;
+  font-size:11px;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:.03em;color:var(--g1);transition:all .12s}
+.period-btn:hover{color:var(--teal)}
+.period-btn.on{background:#fff;color:var(--teal);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+.live-list,.kb-stats{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.kb-stats{background:linear-gradient(135deg,rgba(13,148,136,.06),rgba(37,99,235,.05));
+  border:1px solid rgba(13,148,136,.18)}
+.live-list h4,.kb-stats h4{font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.12em;
+  color:var(--g2);text-transform:uppercase;margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px}
+.kb-stats h4{color:var(--teal)}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pls 1.5s infinite}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.3}}
+.live-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--border);font-size:12px}
+.live-item:last-child{border-bottom:none}
+.live-time{font-family:'Space Mono',monospace;font-size:10px;color:var(--g2)}
+.live-text{flex:1;color:var(--g1)}
+.live-flag{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;font-family:'Space Mono',monospace}
+.live-flag.ok{background:rgba(22,163,74,.1);color:var(--green)}
+.live-flag.new{background:rgba(13,148,136,.1);color:var(--teal)}
+.live-flag.alert{background:rgba(217,119,6,.1);color:var(--amber)}
+.kb-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;color:var(--g1)}
+.kb-row b{color:var(--w)}
+
+.foot{margin-top:30px;text-align:center;font-size:11px;color:var(--g2);font-family:'Space Mono',monospace;
+  letter-spacing:.1em;text-transform:uppercase}
+
+@media(max-width:1100px){
+  .grid{grid-template-columns:1fr;gap:18px}
+  .phone-wrap{order:-1}
+  .dash{flex-direction:row;flex-wrap:wrap}
+  .metric,.live-list,.kb-stats{flex:1;min-width:240px}
+}
+@media(max-width:600px){
+  .wrap{padding:18px 14px 40px}
+  .bar{padding:12px}
+  .phone{height:600px;max-width:340px}
+  .dash{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<div class="wrap">
+  <div class="head">
+    <div class="logo-block">
+      <div class="logo-mark">UMC</div>
+      <div>
+        <div class="brand">UMC Лиссабон</div>
+        <div class="brand-sub">Интерактивный прототип ИИ-бота</div>
+      </div>
+    </div>
+    <div class="crumbs">
+      <span>Интерактивный прототип</span> <span>›</span>
+      <span class="act">Можно пройти самому</span>
+    </div>
+  </div>
+
+  <div class="bar">
+    <div class="bar-l">
+      <span class="bar-lbl">Язык</span>
+      <div class="lang-switch">
+        <button class="lang-btn on" data-lang="ru">RU</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="pt">PT</button>
+      </div>
+      <span class="bar-lbl" style="margin-left:8px">Канал</span>
+      <div class="channel-switch">
+        <button class="ch-btn on" data-ch="wa">WhatsApp</button>
+        <button class="ch-btn" data-ch="tg">Telegram</button>
+        <button class="ch-btn" data-ch="web">Виджет</button>
+      </div>
+    </div>
+    <div class="bar-r">
+      <button class="btn" id="resetBtn">Сбросить</button>
+      <button class="btn" id="autoBtn">Авто-демо</button>
+      <button class="btn primary" id="manualBtn">Пройти самому</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h3>Сценарии (8 шт.)</h3>
+      <div class="scen act" data-scen="booking">
+        <div class="scen-no">A · Запись</div>
+        <div class="scen-tit">Запись к GP</div>
+        <div class="scen-tag">Свободные слоты на завтра + подтверждение</div>
+      </div>
+      <div class="scen" data-scen="price">
+        <div class="scen-no">B · Цены</div>
+        <div class="scen-tit">Цены и услуги</div>
+        <div class="scen-tag">Сколько стоит приём педиатра</div>
+      </div>
+      <div class="scen" data-scen="prep">
+        <div class="scen-no">C · Подготовка</div>
+        <div class="scen-tit">Подготовка к УЗИ</div>
+        <div class="scen-tag">Что взять, нужно ли натощак</div>
+      </div>
+      <div class="scen" data-scen="insurance">
+        <div class="scen-no">D · Страховка</div>
+        <div class="scen-tit">Проверка покрытия</div>
+        <div class="scen-tag">Покрывает ли страховка анализы</div>
+      </div>
+      <div class="scen" data-scen="reminder">
+        <div class="scen-no">E · Напоминание</div>
+        <div class="scen-tit">Напоминание за 24ч</div>
+        <div class="scen-tag">Подтверждение или перенос</div>
+      </div>
+      <div class="scen" data-scen="faq">
+        <div class="scen-no">F · Частые вопросы</div>
+        <div class="scen-tit">Общие вопросы</div>
+        <div class="scen-tag">Адрес, часы, языки, направления</div>
+      </div>
+      <div class="scen" data-scen="reactivation">
+        <div class="scen-no">G · Реактивация</div>
+        <div class="scen-tit">Возврат пациента</div>
+        <div class="scen-tag">Бот сам пишет и записывает на контроль</div>
+      </div>
+      <div class="scen" data-scen="postvisit">
+        <div class="scen-no">H · После приёма</div>
+        <div class="scen-tit">Итоги визита</div>
+        <div class="scen-tag">Назначения, лекарства, запись на контроль</div>
+      </div>
+
+      <div class="hint">
+        <div class="hint-l">Подсказка</div>
+        <div class="hint-t">Выберите сценарий - бот начнёт диалог и остановится на вашем ходе. Нажимайте предложенные кнопки или пишите свой ответ в поле внизу. Кнопка «Авто-демо» проиграет весь диалог сама. Язык и канал переключаются в любой момент.</div>
+      </div>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="screen wa" id="screen">
+          <div class="chat-head">
+            <div class="avatar">U</div>
+            <div class="chat-meta">
+              <div class="chat-name" id="chatName">UMC Lisbon · WhatsApp</div>
+              <div class="chat-stat" id="chatStat">online · ИИ-ассистент</div>
+            </div>
+            <div class="chat-actions">⋮</div>
+          </div>
+          <div class="chat-body" id="chat"></div>
+          <div class="chat-input">
+            <input id="userInput" type="text" placeholder="Введите сообщение...">
+            <button class="send-b" id="sendBtn">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash">
+      <div class="dash-head">
+        <div class="dash-title"><span class="ddot"></span>Панель администратора</div>
+        <div class="dash-sub" id="dashPeriodLbl">Данные за сегодня · демо</div>
+        <div class="period-switch">
+          <button class="period-btn on" data-period="today">Сегодня</button>
+          <button class="period-btn" data-period="week">7 дней</button>
+          <button class="period-btn" data-period="month">30 дней</button>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric-lbl" id="mDialLbl">Диалогов · сегодня</div>
+        <div class="metric-val teal" id="mDial">147</div>
+        <div class="metric-sub" id="mDialSub">+34% к прошлой неделе</div>
+        <div class="metric-bar"><div class="metric-bar-fill" id="mDialBar" style="width:68%"></div></div>
+      </div>
+      <div class="metric">
+        <div class="metric-lbl">Записей через бота</div>
+        <div class="metric-val blue" id="mBook">23</div>
+        <div class="metric-sub" id="mBookSub">из них 12 в нерабочее время</div>
+        <div class="metric-bar"><div class="metric-bar-fill" id="mBookBar" style="width:42%;background:var(--blue)"></div></div>
+      </div>
+      <div class="metric">
+        <div class="metric-lbl">Среднее время ответа</div>
+        <div class="metric-val green">2.4 сек</div>
+        <div class="metric-sub">vs. 4 мин у ресепшена</div>
+      </div>
+      <div class="metric">
+        <div class="metric-lbl">Разгрузка ресепшена</div>
+        <div class="metric-val amber">62%</div>
+        <div class="metric-sub">типовых вопросов закрыто ботом</div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:62%;background:var(--amber)"></div></div>
+      </div>
+
+      <div class="kb-stats">
+        <h4>База знаний · 5 направлений</h4>
+        <div class="kb-row"><span>GP / Семейный врач</span><b>247 вопросов</b></div>
+        <div class="kb-row"><span>Педиатрия</span><b>189 вопросов</b></div>
+        <div class="kb-row"><span>Гинекология</span><b>134 вопроса</b></div>
+        <div class="kb-row"><span>ЛОР</span><b>98 вопросов</b></div>
+        <div class="kb-row"><span>Диагностика / УЗИ</span><b>156 вопросов</b></div>
+      </div>
+
+      <div class="live-list">
+        <h4><span class="live-dot"></span>Живая лента</h4>
+        <div class="live-item">
+          <span class="live-time">11:42</span>
+          <span class="live-text">EN · Запись к GP</span>
+          <span class="live-flag ok">OK</span>
+        </div>
+        <div class="live-item">
+          <span class="live-time">11:38</span>
+          <span class="live-text">PT · Вопрос про страховку</span>
+          <span class="live-flag ok">OK</span>
+        </div>
+        <div class="live-item">
+          <span class="live-time">11:31</span>
+          <span class="live-text">RU · Подготовка к УЗИ</span>
+          <span class="live-flag ok">OK</span>
+        </div>
+        <div class="live-item">
+          <span class="live-time">11:24</span>
+          <span class="live-text">EN · Передан врачу</span>
+          <span class="live-flag alert">HUMAN</span>
+        </div>
+        <div class="live-item">
+          <span class="live-time">11:18</span>
+          <span class="live-text">RU · Новый лид</span>
+          <span class="live-flag new">NEW</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Прототип · Данные демонстрационные · Готов к адаптации под систему записи и базу знаний UMC</div>
+</div>
+
+<script>
+const SCENARIOS = {
+  booking: {
+    ru: [
+      {who:'user', text:'Добрый день, хочу записаться к терапевту на завтра'},
+      {who:'bot', text:'Здравствуйте! 👋 Я ассистент UMC Lisbon. Подберу свободные слоты к GP на завтра, {date}.'},
+      {who:'bot', card:'slots', title:'Доступные слоты · GP', slots:['09:30','11:00','14:15','16:45']},
+      {who:'user', text:'14:15'},
+      {who:'bot', text:'Уточните, пожалуйста, ваше имя и фамилию для записи.'},
+      {who:'user', text:'Анна Соколова'},
+      {who:'bot', text:'Спасибо, Анна. Можете указать номер телефона для подтверждения?'},
+      {who:'user', text:'+351 912 345 678'},
+      {who:'bot', card:'confirm', title:'Запись подтверждена ✓', rows:[
+        ['Врач','Dra. Sofia Pereira · GP'],['Дата','завтра, 14:15'],['Адрес','Av. da Liberdade 123, Lisboa'],['Длительность','30 мин']
+      ]},
+      {who:'bot', text:'Отправлю напоминание за 24 часа и за 2 часа до приёма. До встречи!'}
+    ],
+    en: [
+      {who:'user', text:'Hi, I would like to book a GP appointment for tomorrow'},
+      {who:'bot', text:'Hello! 👋 I am the UMC Lisbon assistant. Here are the available GP slots for tomorrow, {date}.'},
+      {who:'bot', card:'slots', title:'Available slots · GP', slots:['09:30','11:00','14:15','16:45']},
+      {who:'user', text:'14:15'},
+      {who:'bot', text:'Could you share your full name for the booking?'},
+      {who:'user', text:'Anna Sokolova'},
+      {who:'bot', text:'Thank you, Anna. And a phone number for confirmation?'},
+      {who:'user', text:'+351 912 345 678'},
+      {who:'bot', card:'confirm', title:'Booking confirmed ✓', rows:[
+        ['Doctor','Dra. Sofia Pereira · GP'],['Date','tomorrow, 14:15'],['Address','Av. da Liberdade 123, Lisboa'],['Duration','30 min']
+      ]},
+      {who:'bot', text:'I will send reminders 24h and 2h before. See you soon!'}
+    ],
+    pt: [
+      {who:'user', text:'Olá, gostaria de marcar uma consulta de clínica geral para amanhã'},
+      {who:'bot', text:'Olá! 👋 Sou o assistente da UMC Lisbon. Aqui estão os horários disponíveis para amanhã, {date}.'},
+      {who:'bot', card:'slots', title:'Horários disponíveis · GP', slots:['09:30','11:00','14:15','16:45']},
+      {who:'user', text:'14:15'},
+      {who:'bot', text:'Pode indicar o seu nome completo para a marcação?'},
+      {who:'user', text:'Anna Sokolova'},
+      {who:'bot', text:'Obrigada, Anna. E o número de telemóvel para confirmação?'},
+      {who:'user', text:'+351 912 345 678'},
+      {who:'bot', card:'confirm', title:'Marcação confirmada ✓', rows:[
+        ['Médico','Dra. Sofia Pereira · GP'],['Data','amanhã, 14:15'],['Morada','Av. da Liberdade 123, Lisboa'],['Duração','30 min']
+      ]},
+      {who:'bot', text:'Vou enviar lembretes 24h e 2h antes. Até breve!'}
+    ]
+  },
+  price: {
+    ru: [
+      {who:'user', text:'Сколько стоит приём педиатра?'},
+      {who:'bot', card:'price', title:'Стоимость · Педиатрия', rows:[
+        ['Первичная консультация','€ 95'],['Повторный приём','€ 75'],['Онлайн-консультация','€ 60'],['Программа годового наблюдения','от € 480']
+      ]},
+      {who:'bot', text:'Если у вас страховка - проверю покрытие. Назовите страховую компанию или сразу запишемся?'},
+      {who:'bot', quick:['Записать ребёнка','Проверить страховку','Узнать про программу']}
+    ],
+    en: [
+      {who:'user', text:'How much is a paediatric consultation?'},
+      {who:'bot', card:'price', title:'Pricing · Paediatrics', rows:[
+        ['First consultation','€ 95'],['Follow-up','€ 75'],['Online consultation','€ 60'],['Annual care program','from € 480']
+      ]},
+      {who:'bot', text:'If you have insurance I can check coverage. Which insurer do you have, or shall we book directly?'},
+      {who:'bot', quick:['Book for my child','Check insurance','Tell me about the program']}
+    ],
+    pt: [
+      {who:'user', text:'Quanto custa uma consulta de pediatria?'},
+      {who:'bot', card:'price', title:'Preços · Pediatria', rows:[
+        ['1.ª consulta','€ 95'],['Consulta de seguimento','€ 75'],['Consulta online','€ 60'],['Programa anual','desde € 480']
+      ]},
+      {who:'bot', text:'Se tiver seguro, posso verificar a cobertura. Indica a seguradora ou prefere marcar diretamente?'},
+      {who:'bot', quick:['Marcar para o meu filho','Verificar seguro','Saber mais do programa']}
+    ]
+  },
+  prep: {
+    ru: [
+      {who:'user', text:'Хочу записаться на УЗИ брюшной полости. Что нужно для подготовки?'},
+      {who:'bot', text:'Хороший вопрос. Для УЗИ брюшной полости важна подготовка:'},
+      {who:'bot', card:'prep', title:'Подготовка к УЗИ · 1-2 дня', rows:[
+        ['За 2 дня','исключить капусту, бобовые, газировку, чёрный хлеб'],
+        ['За 8-12 часов','не есть (натощак)'],
+        ['Утром','не пить, не курить, не жевать жвачку'],
+        ['С собой','паспорт, страховку, прежние результаты']
+      ]},
+      {who:'bot', text:'Подберу свободные утренние слоты на этой неделе?'},
+      {who:'user', text:'Да, утром'},
+      {who:'bot', text:'Вот свободные утренние слоты на УЗИ:'},
+      {who:'bot', card:'slots', title:'Утренние слоты · УЗИ', slots:['Ср 08:30','Чт 09:00','Пт 08:15','Пт 09:45']},
+      {who:'user', text:'Чт 09:00'},
+      {who:'bot', text:'Отлично! На чьё имя записываем?'},
+      {who:'user', text:'Игорь Лебедев'},
+      {who:'bot', card:'confirm', title:'Запись на УЗИ подтверждена ✓', rows:[
+        ['Исследование','УЗИ брюшной полости'],['Дата','четверг, 09:00'],['Адрес','Av. da Liberdade 123, Lisboa'],['Подготовка','натощак · памятка выше']
+      ]},
+      {who:'bot', text:'Памятку и напоминание пришлю в этот чат за день до визита. Всё оформил - администратора беспокоить не нужно. Хорошего дня! 🙌'}
+    ],
+    en: [
+      {who:'user', text:'I want to book an abdominal ultrasound. What is the preparation?'},
+      {who:'bot', text:'Great question. Preparation matters for abdominal ultrasound:'},
+      {who:'bot', card:'prep', title:'Ultrasound prep · 1-2 days', rows:[
+        ['2 days before','no cabbage, beans, fizzy drinks, dark bread'],
+        ['8-12h before','no food (fasting)'],
+        ['On the day','no drinks, no smoking, no chewing gum'],
+        ['Bring','ID, insurance, previous results']
+      ]},
+      {who:'bot', text:'Shall I check morning slots this week?'},
+      {who:'user', text:'Yes, morning'},
+      {who:'bot', text:'Here are the available morning slots for the ultrasound:'},
+      {who:'bot', card:'slots', title:'Morning slots · Ultrasound', slots:['Wed 08:30','Thu 09:00','Fri 08:15','Fri 09:45']},
+      {who:'user', text:'Thu 09:00'},
+      {who:'bot', text:'Great! What name should I book it under?'},
+      {who:'user', text:'Igor Lebedev'},
+      {who:'bot', card:'confirm', title:'Ultrasound booked ✓', rows:[
+        ['Exam','Abdominal ultrasound'],['Date','Thursday, 09:00'],['Address','Av. da Liberdade 123, Lisboa'],['Prep','fasting · checklist above']
+      ]},
+      {who:'bot', text:'I will send the checklist and a reminder here the day before. All done - no need to involve the reception. Have a great day! 🙌'}
+    ],
+    pt: [
+      {who:'user', text:'Quero marcar uma ecografia abdominal. Qual é a preparação?'},
+      {who:'bot', text:'Boa pergunta. A preparação é importante para a ecografia abdominal:'},
+      {who:'bot', card:'prep', title:'Preparação · 1-2 dias', rows:[
+        ['2 dias antes','evitar couve, leguminosas, gaseificadas, pão escuro'],
+        ['8-12h antes','jejum'],
+        ['No dia','não beber, não fumar, não mascar pastilha'],
+        ['Trazer','BI, seguro, exames anteriores']
+      ]},
+      {who:'bot', text:'Verifico os horários da manhã desta semana?'},
+      {who:'user', text:'Sim, manhã'},
+      {who:'bot', text:'Aqui estão os horários da manhã disponíveis para a ecografia:'},
+      {who:'bot', card:'slots', title:'Horários manhã · Ecografia', slots:['Qua 08:30','Qui 09:00','Sex 08:15','Sex 09:45']},
+      {who:'user', text:'Qui 09:00'},
+      {who:'bot', text:'Ótimo! Em nome de quem marco?'},
+      {who:'user', text:'Igor Lebedev'},
+      {who:'bot', card:'confirm', title:'Ecografia marcada ✓', rows:[
+        ['Exame','Ecografia abdominal'],['Data','quinta-feira, 09:00'],['Morada','Av. da Liberdade 123, Lisboa'],['Preparação','jejum · guia acima']
+      ]},
+      {who:'bot', text:'Envio o guia e um lembrete aqui no dia anterior. Está tudo tratado - sem precisar da receção. Bom dia! 🙌'}
+    ]
+  },
+  insurance: {
+    ru: [
+      {who:'user', text:'Покрывает ли Médis анализы крови?'},
+      {who:'bot', text:'Сейчас проверю по правилам Médis для UMC Lisbon...'},
+      {who:'bot', card:'ins', title:'Médis · покрытие', rows:[
+        ['Общий анализ крови','✓ 80% покрытия'],
+        ['Биохимия','✓ 80% покрытия'],
+        ['Гормоны','✓ 70% покрытия'],
+        ['Соплатёж пациента','€ 5-15 в зависимости от теста'],
+        ['Направление врача','требуется']
+      ]},
+      {who:'bot', text:'Если хотите - запишу к GP, чтобы получить направление, и забронирую лабораторию на тот же день.'},
+      {who:'bot', quick:['Да, всё вместе','Только лабораторию','У меня уже есть направление']}
+    ],
+    en: [
+      {who:'user', text:'Does Médis cover blood tests?'},
+      {who:'bot', text:'Let me check the Médis rules for UMC Lisbon...'},
+      {who:'bot', card:'ins', title:'Médis · coverage', rows:[
+        ['Full blood count','✓ 80% covered'],
+        ['Biochemistry','✓ 80% covered'],
+        ['Hormones','✓ 70% covered'],
+        ['Patient co-pay','€ 5-15 per test'],
+        ['GP referral','required']
+      ]},
+      {who:'bot', text:'I can book a GP for the referral and the lab on the same day - want me to?'},
+      {who:'bot', quick:['Yes, both','Lab only','I already have a referral']}
+    ],
+    pt: [
+      {who:'user', text:'A Médis cobre análises ao sangue?'},
+      {who:'bot', text:'Vou verificar as regras Médis para a UMC Lisbon...'},
+      {who:'bot', card:'ins', title:'Médis · cobertura', rows:[
+        ['Hemograma','✓ 80% comparticipação'],
+        ['Bioquímica','✓ 80% comparticipação'],
+        ['Hormonas','✓ 70% comparticipação'],
+        ['Co-pagamento','€ 5-15 por análise'],
+        ['Requisição médica','necessária']
+      ]},
+      {who:'bot', text:'Posso marcar consulta de GP para a requisição e o laboratório no mesmo dia.'},
+      {who:'bot', quick:['Sim, ambos','Só laboratório','Já tenho requisição']}
+    ]
+  },
+  reminder: {
+    ru: [
+      {who:'bot', text:'Здравствуйте, Анна! 👋'},
+      {who:'bot', card:'reminder', title:'Напоминание · завтра', rows:[
+        ['Приём','Dra. Sofia Pereira · GP'],['Время','14:15'],['Адрес','Av. da Liberdade 123, Lisboa'],['Парковка','подземная, въезд с Rua Rosa Araújo']
+      ]},
+      {who:'bot', text:'Подтверждаете запись или нужно перенести?'},
+      {who:'bot', quick:['✓ Подтверждаю','Перенести','Отменить']},
+      {who:'user', text:'Подтверждаю'},
+      {who:'bot', text:'Отлично! 🙌 Ждём вас завтра в 14:15. Если что-то изменится - просто напишите.'},
+      {who:'bot', text:'P.S. До приёма не нужно ничего особенного, просто возьмите страховку и ID.'}
+    ],
+    en: [
+      {who:'bot', text:'Hi Anna! 👋'},
+      {who:'bot', card:'reminder', title:'Reminder · tomorrow', rows:[
+        ['Appointment','Dra. Sofia Pereira · GP'],['Time','14:15'],['Address','Av. da Liberdade 123, Lisboa'],['Parking','underground, entry on Rua Rosa Araújo']
+      ]},
+      {who:'bot', text:'Do you confirm or need to reschedule?'},
+      {who:'bot', quick:['✓ Confirm','Reschedule','Cancel']},
+      {who:'user', text:'Confirm'},
+      {who:'bot', text:'Great! 🙌 See you tomorrow at 14:15. Just message me if anything changes.'},
+      {who:'bot', text:'P.S. Nothing special to prepare, just bring your insurance and ID.'}
+    ],
+    pt: [
+      {who:'bot', text:'Olá, Anna! 👋'},
+      {who:'bot', card:'reminder', title:'Lembrete · amanhã', rows:[
+        ['Consulta','Dra. Sofia Pereira · GP'],['Hora','14:15'],['Morada','Av. da Liberdade 123, Lisboa'],['Estacionamento','subterrâneo, entrada na Rua Rosa Araújo']
+      ]},
+      {who:'bot', text:'Confirma a consulta ou prefere remarcar?'},
+      {who:'bot', quick:['✓ Confirmar','Remarcar','Cancelar']},
+      {who:'user', text:'Confirmar'},
+      {who:'bot', text:'Perfeito! 🙌 Até amanhã às 14:15. Se algo mudar, basta enviar mensagem.'},
+      {who:'bot', text:'P.S. Não precisa de preparação especial, basta trazer seguro e identificação.'}
+    ]
+  },
+  faq: {
+    ru: [
+      {who:'user', text:'Где вы находитесь и как добраться?'},
+      {who:'bot', text:'UMC Lisbon - Av. da Liberdade 123, Лиссабон. Метро Avenida (синяя линия), 2 минуты пешком. Есть подземная парковка с въездом с Rua Rosa Araújo.'},
+      {who:'user', text:'А какие у вас часы работы?'},
+      {who:'bot', text:'Клиника принимает Пн-Пт 08:00-20:00, Сб 09:00-15:00. Я, ассистент, на связи и помогаю с записью 24/7.'},
+      {who:'user', text:'На каких языках вы принимаете?'},
+      {who:'bot', text:'Наши врачи и я общаемся на английском, португальском и русском - пишите на любом удобном языке.'},
+      {who:'user', text:'Нужно ли направление, чтобы попасть к специалисту?'},
+      {who:'bot', text:'К большинству специалистов можно записаться напрямую, без направления. Для части анализов по страховке направление от GP нужно - подскажу по вашему конкретному случаю.'},
+      {who:'bot', text:'Могу подсказать по ценам и страховке или сразу записать на приём. Что для вас удобнее?'},
+      {who:'bot', quick:['Записаться на приём','Узнать цены','Проверить страховку']}
+    ],
+    en: [
+      {who:'user', text:'Where are you located and how do I get there?'},
+      {who:'bot', text:'UMC Lisbon - Av. da Liberdade 123, Lisbon. Metro Avenida (blue line), a 2-minute walk. There is underground parking with entry on Rua Rosa Araújo.'},
+      {who:'user', text:'What are your opening hours?'},
+      {who:'bot', text:'The clinic is open Mon-Fri 08:00-20:00, Sat 09:00-15:00. I, the assistant, am available and can book for you 24/7.'},
+      {who:'user', text:'Which languages do you work in?'},
+      {who:'bot', text:'Our doctors and I speak English, Portuguese and Russian - feel free to write in whichever is easiest for you.'},
+      {who:'user', text:'Do I need a referral to see a specialist?'},
+      {who:'bot', text:'For most specialists you can book directly, no referral needed. Some insurance-covered tests require a GP referral - I will guide you for your specific case.'},
+      {who:'bot', text:'I can help with prices and insurance, or book you in right away. What works best?'},
+      {who:'bot', quick:['Book an appointment','See prices','Check insurance']}
+    ],
+    pt: [
+      {who:'user', text:'Onde ficam e como chego aí?'},
+      {who:'bot', text:'UMC Lisbon - Av. da Liberdade 123, Lisboa. Metro Avenida (linha azul), a 2 minutos a pé. Há estacionamento subterrâneo com entrada na Rua Rosa Araújo.'},
+      {who:'user', text:'Qual é o horário de funcionamento?'},
+      {who:'bot', text:'A clínica funciona Seg-Sex 08:00-20:00, Sáb 09:00-15:00. Eu, o assistente, estou disponível e marco consultas 24/7.'},
+      {who:'user', text:'Em que línguas atendem?'},
+      {who:'bot', text:'Os nossos médicos e eu falamos inglês, português e russo - escreva na língua que preferir.'},
+      {who:'user', text:'Preciso de requisição para ver um especialista?'},
+      {who:'bot', text:'Para a maioria dos especialistas pode marcar diretamente, sem requisição. Algumas análises pelo seguro precisam de requisição do GP - oriento-o no seu caso.'},
+      {who:'bot', text:'Posso ajudar com preços e seguro, ou marcar já a sua consulta. O que prefere?'},
+      {who:'bot', quick:['Marcar consulta','Ver preços','Verificar seguro']}
+    ]
+  },
+  reactivation: {
+    ru: [
+      {who:'bot', text:'Добрый день, Мария! 👋 Это ассистент UMC Lisbon.'},
+      {who:'bot', text:'Вижу, что вы были у нас на приёме у кардиолога около года назад. Самое время для планового контроля - так проще не пропустить важное.'},
+      {who:'bot', card:'react', title:'Рекомендованный контроль', rows:[
+        ['Последний визит','~12 месяцев назад'],['Специалист','Кардиолог'],['Рекомендация','ежегодный осмотр + ЭКГ'],['Ваша скидка','-15% на контрольный приём']
+      ]},
+      {who:'bot', text:'Подобрать удобное время на этой или следующей неделе?'},
+      {who:'user', text:'Давайте на следующей неделе'},
+      {who:'bot', text:'Конечно! Вот свободные слоты у кардиолога:'},
+      {who:'bot', card:'slots', title:'Слоты · Кардиолог', slots:['Пн 10:00','Вт 16:30','Чт 11:15','Пт 09:30']},
+      {who:'user', text:'Вт 16:30'},
+      {who:'bot', card:'confirm', title:'Запись подтверждена ✓', rows:[
+        ['Специалист','Dr. Costa · Кардиолог'],['Дата','вторник, 16:30'],['Приём','осмотр + ЭКГ'],['Скидка','-15% применена']
+      ]},
+      {who:'bot', text:'Готово! Напоминание пришлю заранее. Рады, что возвращаетесь к нам 🙌'}
+    ],
+    en: [
+      {who:'bot', text:'Hello Maria! 👋 This is the UMC Lisbon assistant.'},
+      {who:'bot', text:'I can see you had a cardiology appointment with us about a year ago. It is a good time for your annual check - it helps not to miss anything important.'},
+      {who:'bot', card:'react', title:'Recommended check-up', rows:[
+        ['Last visit','~12 months ago'],['Specialist','Cardiologist'],['Recommendation','annual check + ECG'],['Your discount','-15% on the follow-up']
+      ]},
+      {who:'bot', text:'Shall I find a convenient time this week or next?'},
+      {who:'user', text:'Next week please'},
+      {who:'bot', text:'Of course! Here are the available cardiology slots:'},
+      {who:'bot', card:'slots', title:'Slots · Cardiologist', slots:['Mon 10:00','Tue 16:30','Thu 11:15','Fri 09:30']},
+      {who:'user', text:'Tue 16:30'},
+      {who:'bot', card:'confirm', title:'Booking confirmed ✓', rows:[
+        ['Specialist','Dr. Costa · Cardiologist'],['Date','Tuesday, 16:30'],['Visit','check + ECG'],['Discount','-15% applied']
+      ]},
+      {who:'bot', text:'Done! I will send a reminder in advance. Glad to have you back 🙌'}
+    ],
+    pt: [
+      {who:'bot', text:'Olá, Maria! 👋 Aqui é o assistente da UMC Lisbon.'},
+      {who:'bot', text:'Vejo que teve uma consulta de cardiologia connosco há cerca de um ano. É boa altura para o controlo anual - assim não se perde nada importante.'},
+      {who:'bot', card:'react', title:'Controlo recomendado', rows:[
+        ['Última visita','~12 meses atrás'],['Especialista','Cardiologista'],['Recomendação','controlo anual + ECG'],['O seu desconto','-15% na consulta de seguimento']
+      ]},
+      {who:'bot', text:'Procuro um horário esta semana ou na próxima?'},
+      {who:'user', text:'Na próxima semana, por favor'},
+      {who:'bot', text:'Claro! Aqui estão os horários disponíveis de cardiologia:'},
+      {who:'bot', card:'slots', title:'Horários · Cardiologista', slots:['Seg 10:00','Ter 16:30','Qui 11:15','Sex 09:30']},
+      {who:'user', text:'Ter 16:30'},
+      {who:'bot', card:'confirm', title:'Marcação confirmada ✓', rows:[
+        ['Especialista','Dr. Costa · Cardiologista'],['Data','terça-feira, 16:30'],['Consulta','controlo + ECG'],['Desconto','-15% aplicado']
+      ]},
+      {who:'bot', text:'Pronto! Envio um lembrete com antecedência. Que bom tê-la de volta 🙌'}
+    ]
+  },
+  postvisit: {
+    ru: [
+      {who:'bot', text:'Здравствуйте, Анна! Спасибо, что были сегодня у нас 🙏 Вот итоги вашего визита:'},
+      {who:'bot', card:'visit', title:'Итоги визита · сегодня', rows:[
+        ['Врач','Dra. Sofia Pereira · GP'],['Заключение','ОРВИ, лёгкое течение'],['Процедуры','осмотр, экспресс-тест']
+      ]},
+      {who:'bot', card:'meds', title:'Назначения', rows:[
+        ['Парацетамол 500 мг','при температуре, до 3 раз в день'],['Тёплое питьё и покой','3-5 дней'],['Спрей для горла','2 раза в день, 5 дней']
+      ]},
+      {who:'bot', text:'Заключение врача и список назначений всегда доступны здесь, в чате - можно вернуться к ним в любой момент.'},
+      {who:'bot', text:'Если через 5-7 дней не станет легче - стоит показаться повторно. Записать контрольный приём?'},
+      {who:'user', text:'Да, запишите'},
+      {who:'bot', text:'Вот свободные слоты на контроль через неделю:'},
+      {who:'bot', card:'slots', title:'Контроль · GP', slots:['Пн 12:00','Ср 15:30','Чт 10:45','Пт 14:00']},
+      {who:'user', text:'Ср 15:30'},
+      {who:'bot', card:'confirm', title:'Контроль записан ✓', rows:[
+        ['Врач','Dra. Sofia Pereira · GP'],['Дата','среда, 15:30'],['Тип','повторный приём'],['Стоимость','€ 75']
+      ]},
+      {who:'bot', text:'Отлично! Все материалы визита и назначения остаются в этом чате. Выздоравливайте! 🌿'}
+    ],
+    en: [
+      {who:'bot', text:'Hello Anna! Thank you for visiting us today 🙏 Here is a summary of your visit:'},
+      {who:'bot', card:'visit', title:'Visit summary · today', rows:[
+        ['Doctor','Dra. Sofia Pereira · GP'],['Assessment','mild viral infection'],['Procedures','examination, rapid test']
+      ]},
+      {who:'bot', card:'meds', title:'Prescriptions', rows:[
+        ['Paracetamol 500 mg','for fever, up to 3x/day'],['Warm fluids and rest','3-5 days'],['Throat spray','2x/day, 5 days']
+      ]},
+      {who:'bot', text:'The doctor\u2019s notes and your prescription list are always available here in the chat - you can come back to them any time.'},
+      {who:'bot', text:'If you do not feel better in 5-7 days, a follow-up is recommended. Shall I book a follow-up visit?'},
+      {who:'user', text:'Yes, please'},
+      {who:'bot', text:'Here are the follow-up slots for next week:'},
+      {who:'bot', card:'slots', title:'Follow-up · GP', slots:['Mon 12:00','Wed 15:30','Thu 10:45','Fri 14:00']},
+      {who:'user', text:'Wed 15:30'},
+      {who:'bot', card:'confirm', title:'Follow-up booked ✓', rows:[
+        ['Doctor','Dra. Sofia Pereira · GP'],['Date','Wednesday, 15:30'],['Type','follow-up'],['Price','€ 75']
+      ]},
+      {who:'bot', text:'All set! Your visit notes and prescriptions stay in this chat. Get well soon! 🌿'}
+    ],
+    pt: [
+      {who:'bot', text:'Olá, Anna! Obrigada por nos visitar hoje 🙏 Aqui está o resumo da sua consulta:'},
+      {who:'bot', card:'visit', title:'Resumo da consulta · hoje', rows:[
+        ['Médico','Dra. Sofia Pereira · GP'],['Avaliação','infeção viral ligeira'],['Procedimentos','exame, teste rápido']
+      ]},
+      {who:'bot', card:'meds', title:'Prescrições', rows:[
+        ['Paracetamol 500 mg','para febre, até 3x/dia'],['Líquidos quentes e repouso','3-5 dias'],['Spray para a garganta','2x/dia, 5 dias']
+      ]},
+      {who:'bot', text:'As notas do médico e a lista de prescrições estão sempre disponíveis aqui no chat - pode voltar a elas quando quiser.'},
+      {who:'bot', text:'Se não melhorar em 5-7 dias, recomenda-se uma consulta de seguimento. Marco já o seguimento?'},
+      {who:'user', text:'Sim, por favor'},
+      {who:'bot', text:'Aqui estão os horários de seguimento para a próxima semana:'},
+      {who:'bot', card:'slots', title:'Seguimento · GP', slots:['Seg 12:00','Qua 15:30','Qui 10:45','Sex 14:00']},
+      {who:'user', text:'Qua 15:30'},
+      {who:'bot', card:'confirm', title:'Seguimento marcado ✓', rows:[
+        ['Médico','Dra. Sofia Pereira · GP'],['Data','quarta-feira, 15:30'],['Tipo','seguimento'],['Preço','€ 75']
+      ]},
+      {who:'bot', text:'Tudo pronto! As notas e prescrições ficam neste chat. As melhoras! 🌿'}
+    ]
+  }
+};
+
+const CHANNEL_LABELS = {
+  ru: {wa:['UMC Lisbon · WhatsApp','online · ИИ-ассистент'],
+       tg:['UMC Lisbon · Telegram','bot · ИИ-ассистент'],
+       web:['UMC Lisbon · Чат на сайте','онлайн · обычно отвечает за 5 сек']},
+  en: {wa:['UMC Lisbon · WhatsApp','online · AI assistant'],
+       tg:['UMC Lisbon · Telegram','bot · AI assistant'],
+       web:['UMC Lisbon · Website chat','online · usually replies in 5 sec']},
+  pt: {wa:['UMC Lisbon · WhatsApp','online · assistente IA'],
+       tg:['UMC Lisbon · Telegram','bot · assistente IA'],
+       web:['UMC Lisbon · Chat do site','online · responde em 5 seg']}
+};
+
+const WELCOME = {
+  ru:'Здравствуйте! 👋 Я ИИ-ассистент UMC Lisbon. Чем могу помочь? Выберите тему ниже или просто напишите свой вопрос.',
+  en:'Hello! 👋 I am the UMC Lisbon AI assistant. How can I help? Pick a topic below or just type your question.',
+  pt:'Olá! 👋 Sou o assistente IA da UMC Lisbon. Como posso ajudar? Escolha um tema abaixo ou escreva a sua pergunta.'
+};
+
+const MENU = {
+  ru:[['booking','📅 Записаться на приём'],['price','💶 Цены и услуги'],['prep','📋 Подготовка к анализам/УЗИ'],['insurance','🛡 Страховка и покрытие'],['faq','❓ Частые вопросы']],
+  en:[['booking','📅 Book an appointment'],['price','💶 Prices & services'],['prep','📋 Test/ultrasound prep'],['insurance','🛡 Insurance & coverage'],['faq','❓ FAQ']],
+  pt:[['booking','📅 Marcar consulta'],['price','💶 Preços e serviços'],['prep','📋 Preparação para exames'],['insurance','🛡 Seguro e cobertura'],['faq','❓ Perguntas frequentes']]
+};
+const MENU_CAP = {
+  ru:'Меню · нажмите тему или напишите вопрос',
+  en:'Menu · tap a topic or type your question',
+  pt:'Menu · toque num tema ou escreva a sua pergunta'
+};
+
+const state = { lang:'ru', channel:'wa', scenario:'booking', mode:'idle', playing:false, awaiting:false, botBusy:false, turn:0, seq:null, idx:0, period:'today', metrics:{dial:147, book:23} };
+
+const PERIOD_DATA = {
+  today: {dial:147,  dialSub:'+34% к прошлой неделе',  dialBar:68, book:23,  bookSub:'из них 12 в нерабочее время',  bookBar:42, lbl:'Диалогов · сегодня', head:'Данные за сегодня · демо'},
+  week:  {dial:1024, dialSub:'+18% к прошлой неделе',  dialBar:74, book:168, bookSub:'из них 71 в нерабочее время',  bookBar:55, lbl:'Диалогов · 7 дней',  head:'Данные за 7 дней · демо'},
+  month: {dial:4380, dialSub:'+27% к прошлому месяцу',  dialBar:82, book:690, bookSub:'из них 305 в нерабочее время', bookBar:64, lbl:'Диалогов · 30 дней', head:'Данные за 30 дней · демо'}
+};
+const fmtNum = n => n.toLocaleString('ru-RU');
+
+function setPeriod(p){
+  state.period = p;
+  const d = PERIOD_DATA[p];
+  state.metrics.dial = d.dial;
+  state.metrics.book = d.book;
+  mDialEl.textContent = fmtNum(d.dial);
+  mBookEl.textContent = fmtNum(d.book);
+  $('mDialSub').textContent = d.dialSub;
+  $('mBookSub').textContent = d.bookSub;
+  $('mDialBar').style.width = d.dialBar + '%';
+  $('mBookBar').style.width = d.bookBar + '%';
+  $('mDialLbl').textContent = d.lbl;
+  $('dashPeriodLbl').textContent = d.head;
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.toggle('on', b.dataset.period === p));
+}
+
+const $ = id => document.getElementById(id);
+const chatEl = $('chat');
+const screenEl = $('screen');
+const chatNameEl = $('chatName');
+const chatStatEl = $('chatStat');
+const mDialEl = $('mDial');
+const mBookEl = $('mBook');
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function getTime(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+function getTomorrow(){
+  const fmt = {ru:'ru-RU', en:'en-GB', pt:'pt-PT'}[state.lang];
+  const d = new Date(); d.setDate(d.getDate() + 1);
+  return d.toLocaleDateString(fmt, {day:'numeric', month:'long'});
+}
+function scrollBottom(){ chatEl.scrollTop = chatEl.scrollHeight; }
+
+function makeEl(tag, cls, text){
+  const el = document.createElement(tag);
+  if(cls) el.className = cls;
+  if(text != null) el.textContent = text;
+  return el;
+}
+
+function addText(who, raw){
+  const text = raw.replace('{date}', getTomorrow());
+  const m = makeEl('div', 'msg ' + who);
+  m.appendChild(makeEl('span', 'msg-body', text));
+  const t = makeEl('span', 'msg-time');
+  t.appendChild(makeEl('span', null, getTime()));
+  if(who === 'out') t.appendChild(makeEl('span', 'msg-ck', '✓✓'));
+  m.appendChild(t);
+  chatEl.appendChild(m);
+  scrollBottom();
+}
+
+const CARD_ICONS = {slots:'📅', confirm:'✓', price:'€', prep:'📋', ins:'🛡', reminder:'⏰', react:'🔔', visit:'🩺', meds:'💊'};
+
+function addCard(card){
+  const wrap = makeEl('div', 'card-msg');
+  const hd = makeEl('div', 'card-msg-hd');
+  hd.appendChild(makeEl('span', null, (CARD_ICONS[card.card] || '✦') + ' ' + card.title));
+  wrap.appendChild(hd);
+  const body = makeEl('div', 'card-msg-body');
+  if(card.rows){
+    card.rows.forEach(([k, v]) => {
+      const row = makeEl('div', 'card-row');
+      row.appendChild(makeEl('span', null, k));
+      row.appendChild(makeEl('b', null, v));
+      body.appendChild(row);
+    });
+  }
+  if(card.slots){
+    const token = state.turn;
+    const grid = makeEl('div', 'slot-pick');
+    card.slots.forEach(s => {
+      const btn = makeEl('div', 'slot', s);
+      btn.addEventListener('click', () => onSlot(s, token));
+      grid.appendChild(btn);
+    });
+    body.appendChild(grid);
+  }
+  wrap.appendChild(body);
+  chatEl.appendChild(wrap);
+  scrollBottom();
+}
+
+function addQuick(items){
+  const token = state.turn;
+  const row = makeEl('div', 'quick-row');
+  items.forEach(q => {
+    const b = makeEl('button', 'qr', q);
+    b.addEventListener('click', () => onQuick(q, token));
+    row.appendChild(b);
+  });
+  chatEl.appendChild(row);
+  scrollBottom();
+}
+
+function addTyping(){
+  const t = makeEl('div', 'typing');
+  t.id = 'tp';
+  t.appendChild(makeEl('span'));
+  t.appendChild(makeEl('span'));
+  t.appendChild(makeEl('span'));
+  chatEl.appendChild(t);
+  scrollBottom();
+}
+function rmTyping(){
+  const t = $('tp');
+  if(t) t.remove();
+}
+
+function clearChat(){ while(chatEl.firstChild) chatEl.removeChild(chatEl.firstChild); }
+
+async function playScenario(){
+  if(state.playing) return;
+  state.playing = true;
+  state.mode = 'auto';
+  state.awaiting = false;
+  state.botBusy = false;
+  clearChat();
+  const seq = SCENARIOS[state.scenario][state.lang];
+  for(const step of seq){
+    if(step.who === 'user'){
+      await sleep(700);
+      addText('out', step.text);
+    } else {
+      await sleep(500);
+      addTyping();
+      await sleep(1100);
+      rmTyping();
+      if(step.text) addText('in', step.text);
+      if(step.card) addCard(step);
+      if(step.quick) addQuick(step.quick);
+    }
+  }
+  bumpMetrics();
+  state.playing = false;
+  state.mode = 'free';
+}
+
+// ---- Интерактивный режим: пользователь сам ведёт диалог ----
+function startManual(){
+  state.playing = false;
+  state.mode = 'manual';
+  state.awaiting = false;
+  state.botBusy = false;
+  state.turn = 0;
+  state.seq = SCENARIOS[state.scenario][state.lang];
+  state.idx = 0;
+  clearChat();
+  // Если сценарий начинается с реплики клиента - отправляем её сразу (как выбор пункта меню)
+  if(state.seq[0] && state.seq[0].who === 'user'){
+    addText('out', state.seq[0].text.replace('{date}', getTomorrow()));
+    state.idx = 1;
+  }
+  runBotTurn();
+}
+
+async function runBotTurn(){
+  state.botBusy = true;
+  state.awaiting = false;
+  let lastChoices = false;
+  while(state.idx < state.seq.length && state.seq[state.idx].who === 'bot'){
+    const step = state.seq[state.idx];
+    await sleep(420);
+    addTyping();
+    await sleep(880);
+    rmTyping();
+    if(step.text) addText('in', step.text);
+    if(step.card) addCard(step);
+    if(step.quick) addQuick(step.quick);
+    lastChoices = !!(step.quick || step.slots);
+    state.idx++;
+  }
+  state.botBusy = false;
+  if(state.idx < state.seq.length && state.seq[state.idx].who === 'user'){
+    state.awaiting = true;
+    if(!lastChoices) showSuggestion(state.seq[state.idx].text);
+    const inp = $('userInput');
+    if(inp) inp.focus();
+  } else {
+    finishScenario();
+  }
+}
+
+function showSuggestion(text){
+  const token = state.turn;
+  const box = makeEl('div', 'sugg');
+  box.id = 'pending';
+  box.appendChild(makeEl('div', 'sugg-cap', {
+    ru:'Нажмите вариант или напишите свой ответ ниже',
+    en:'Tap the option or type your own answer below',
+    pt:'Toque na opção ou escreva a sua resposta abaixo'
+  }[state.lang]));
+  const row = makeEl('div', 'quick-row');
+  const b = makeEl('button', 'qr', '💬 ' + text);
+  b.addEventListener('click', () => { if(state.awaiting && !state.botBusy && token === state.turn) userAnswer(text); });
+  row.appendChild(b);
+  box.appendChild(row);
+  chatEl.appendChild(box);
+  scrollBottom();
+}
+
+function clearPending(){
+  const p = $('pending'); if(p) p.remove();
+  document.querySelectorAll('#chat .quick-row').forEach(r => r.classList.add('used'));
+  document.querySelectorAll('#chat .slot-pick').forEach(g => g.classList.add('used'));
+}
+
+function userAnswer(text){
+  if(state.mode !== 'manual' || state.botBusy || !state.awaiting) return;
+  state.awaiting = false;
+  clearPending();
+  addText('out', text);
+  state.idx++;
+  state.turn++;
+  runBotTurn();
+}
+
+function finishScenario(){
+  state.mode = 'free';
+  state.awaiting = false;
+  state.botBusy = false;
+  bumpMetrics();
+  setTimeout(() => {
+    addText('in', {
+      ru:'Готово ✓ Чем ещё помочь? Выберите тему меню или напишите свой вопрос.',
+      en:'Done ✓ Anything else? Pick a menu topic or type your question.',
+      pt:'Pronto ✓ Mais alguma coisa? Escolha um tema do menu ou escreva a sua pergunta.'
+    }[state.lang]);
+    setTimeout(() => addMenu(), 300);
+  }, 600);
+}
+
+function onSlot(s, token){
+  if(state.mode === 'manual'){
+    if(state.awaiting && !state.botBusy && token === state.turn) userAnswer(s);
+    return;
+  }
+  pickSlot(s);
+}
+function onQuick(q, token){
+  if(state.mode === 'manual'){
+    if(state.awaiting && !state.botBusy && token === state.turn) userAnswer(q);
+    return;
+  }
+  pickQuick(q);
+}
+
+function bumpMetrics(){
+  if(state.period !== 'today') return;
+  state.metrics.dial += Math.floor(Math.random() * 3) + 1;
+  state.metrics.book += 1;
+  mDialEl.textContent = fmtNum(state.metrics.dial);
+  mBookEl.textContent = fmtNum(state.metrics.book);
+}
+
+function pickSlot(s){
+  if(state.playing) return;
+  addText('out', s);
+  setTimeout(() => {
+    addTyping();
+    setTimeout(() => {
+      rmTyping();
+      const reply = {
+        ru: 'Отлично, слот ' + s + ' зарезервирован. Имя для записи?',
+        en: 'Great, ' + s + ' reserved. Your full name?',
+        pt: 'Ótimo, ' + s + ' reservado. O seu nome completo?'
+      }[state.lang];
+      addText('in', reply);
+    }, 900);
+  }, 300);
+}
+
+function pickQuick(q){
+  if(state.playing) return;
+  addText('out', q);
+  const lc = q.toLowerCase();
+  const has = (...ws) => ws.some(w => lc.includes(w));
+  setTimeout(() => {
+    addTyping();
+    setTimeout(() => {
+      rmTyping();
+      // Cancellation
+      if(has('отмен','cancel','cancelar')){
+        addText('in', {
+          ru:'Запись отменена. Будем рады видеть вас в другой раз - пишите в любое время.',
+          en:'Your appointment is cancelled. We would be glad to see you another time - message me anytime.',
+          pt:'Marcação cancelada. Teremos todo o gosto em vê-lo noutra altura - escreva quando quiser.'
+        }[state.lang]);
+        return;
+      }
+      // Confirmation
+      if(has('подтвер','confirm','confirmar')){
+        addText('in', {
+          ru:'Отлично, запись подтверждена! Напоминание пришлю заранее. 🙌',
+          en:'Great, your appointment is confirmed! I will send a reminder in advance. 🙌',
+          pt:'Ótimo, a sua marcação está confirmada! Envio um lembrete com antecedência. 🙌'
+        }[state.lang]);
+        bumpMetrics();
+        return;
+      }
+      // Default: book directly inside the bot - offer slots, no admin handoff
+      addText('in', {
+        ru:'Конечно, записываю прямо здесь. Вот свободные слоты - выберите удобный:',
+        en:'Of course, I will book it right here. Here are the available slots - pick one:',
+        pt:'Claro, marco já aqui. Aqui estão os horários disponíveis - escolha um:'
+      }[state.lang]);
+      const slots = {
+        ru:['Завтра 10:00','Завтра 15:30','Чт 09:15','Пт 12:45'],
+        en:['Tomorrow 10:00','Tomorrow 15:30','Thu 09:15','Fri 12:45'],
+        pt:['Amanhã 10:00','Amanhã 15:30','Qui 09:15','Sex 12:45']
+      }[state.lang];
+      const title = {ru:'Свободные слоты', en:'Available slots', pt:'Horários disponíveis'}[state.lang];
+      addCard({card:'slots', title:title, slots:slots});
+      bumpMetrics();
+    }, 1100);
+  }, 300);
+}
+
+function fakeReply(t){
+  const L = state.lang;
+  const lc = t.toLowerCase();
+  const has = (...ws) => ws.some(w => lc.includes(w));
+  if(has('запис','book','marc'))
+    return {ru:'Конечно! К какому специалисту? GP, педиатр, гинеколог, ЛОР или диагностика?',
+      en:'Of course! Which specialist? GP, paediatrician, gynaecologist, ENT or diagnostics?',
+      pt:'Claro! Que especialista? GP, pediatra, ginecologista, ORL ou diagnóstico?'}[L];
+  if(has('цен','price','preço','custa','стоит'))
+    return {ru:'Я отвечу по ценам, уточните, пожалуйста, направление - например, "цена приёма педиатра" или "стоимость УЗИ".',
+      en:'Happy to share prices - which service? e.g. "GP price" or "ultrasound cost".',
+      pt:'Posso indicar preços - qual o serviço? Ex.: "preço de GP" ou "custo de ecografia".'}[L];
+  if(has('часы','время','hour','open','horário'))
+    return {ru:'Клиника работает Пн-Пт 08:00-20:00, Сб 09:00-15:00. Бот доступен 24/7.',
+      en:'Clinic hours: Mon-Fri 08:00-20:00, Sat 09:00-15:00. The bot is available 24/7.',
+      pt:'Horário: Seg-Sex 08:00-20:00, Sáb 09:00-15:00. O bot está disponível 24/7.'}[L];
+  if(has('адрес','address','morada','где'))
+    return {ru:'UMC Lisbon - Av. da Liberdade 123, Лиссабон. Метро Avenida (синяя линия), 2 мин пешком.',
+      en:'UMC Lisbon · Av. da Liberdade 123, Lisbon. Metro Avenida (blue line), 2 min walk.',
+      pt:'UMC Lisbon · Av. da Liberdade 123, Lisboa. Metro Avenida (linha azul), a 2 min a pé.'}[L];
+  return {ru:'Понял ваш вопрос. Передам администратору - он ответит в течение часа. Или попробуйте один из сценариев слева.',
+    en:'Got your question. I will forward to the admin - reply within an hour. Or try one of the scenarios on the left.',
+    pt:'Recebi a sua questão. Vou encaminhar - resposta dentro de uma hora. Ou experimente um cenário à esquerda.'}[L];
+}
+
+function sendMsg(){
+  const inp = $('userInput');
+  const val = inp.value.trim();
+  if(!val) return;
+  inp.value = '';
+  if(state.mode === 'manual'){
+    if(state.botBusy) return;
+    if(state.awaiting){ userAnswer(val); return; }
+  }
+  addText('out', val);
+  setTimeout(() => {
+    addTyping();
+    setTimeout(() => {
+      rmTyping();
+      addText('in', fakeReply(val));
+      bumpMetrics();
+    }, 1000);
+  }, 300);
+}
+
+function updateChannelLabels(){
+  const [n, s] = CHANNEL_LABELS[state.lang][state.channel];
+  chatNameEl.textContent = n;
+  chatStatEl.textContent = s;
+}
+
+function showWelcome(){
+  state.mode = 'idle';
+  addText('in', WELCOME[state.lang]);
+  setTimeout(() => addMenu(), 350);
+}
+
+function addMenu(){
+  const box = makeEl('div', 'sugg');
+  box.id = 'menu';
+  box.appendChild(makeEl('div', 'sugg-cap', MENU_CAP[state.lang]));
+  const row = makeEl('div', 'quick-row');
+  MENU[state.lang].forEach(([scen, label]) => {
+    const b = makeEl('button', 'qr', label);
+    b.addEventListener('click', () => menuPick(scen));
+    row.appendChild(b);
+  });
+  box.appendChild(row);
+  chatEl.appendChild(box);
+  scrollBottom();
+}
+
+function menuPick(scen){
+  state.scenario = scen;
+  document.querySelectorAll('.scen').forEach(x => x.classList.toggle('act', x.dataset.scen === scen));
+  startManual();
+}
+
+document.querySelectorAll('.lang-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.lang-btn').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    state.lang = b.dataset.lang;
+    updateChannelLabels();
+    if(state.mode === 'auto') playScenario();
+    else if(state.mode === 'idle'){ clearChat(); showWelcome(); }
+    else startManual();
+  });
+});
+document.querySelectorAll('.ch-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.ch-btn').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    state.channel = b.dataset.ch;
+    screenEl.className = 'screen ' + state.channel;
+    updateChannelLabels();
+  });
+});
+document.querySelectorAll('.scen').forEach(s => {
+  s.addEventListener('click', () => {
+    if(state.playing) return;
+    document.querySelectorAll('.scen').forEach(x => x.classList.remove('act'));
+    s.classList.add('act');
+    state.scenario = s.dataset.scen;
+    startManual();
+  });
+});
+document.querySelectorAll('.period-btn').forEach(b => {
+  b.addEventListener('click', () => setPeriod(b.dataset.period));
+});
+$('autoBtn').addEventListener('click', () => playScenario());
+$('manualBtn').addEventListener('click', () => startManual());
+$('resetBtn').addEventListener('click', () => {
+  state.playing = false;
+  state.mode = 'idle';
+  state.awaiting = false;
+  state.botBusy = false;
+  clearChat();
+  showWelcome();
+});
+$('sendBtn').addEventListener('click', sendMsg);
+$('userInput').addEventListener('keydown', e => { if(e.key === 'Enter') sendMsg(); });
+
+updateChannelLabels();
+showWelcome();
+
+setInterval(() => {
+  if(state.period !== 'today') return;
+  if(Math.random() > 0.7){
+    state.metrics.dial += 1;
+    mDialEl.textContent = fmtNum(state.metrics.dial);
+  }
+}, 4000);
+</script>
+</body>
+</html>
