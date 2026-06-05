@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UMC Лиссабон · Интерактивный прототип ИИ-бота</title>
+<title>UMC · Интерактивный прототип ИИ-бота</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -242,7 +242,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
     <div class="logo-block">
       <div class="logo-mark">UMC</div>
       <div>
-        <div class="brand">UMC Лиссабон</div>
+        <div class="brand">UMC</div>
         <div class="brand-sub">Интерактивный прототип ИИ-бота</div>
       </div>
     </div>
@@ -254,13 +254,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 
   <div class="bar">
     <div class="bar-l">
-      <span class="bar-lbl">Язык</span>
-      <div class="lang-switch">
-        <button class="lang-btn on" data-lang="ru">RU</button>
-        <button class="lang-btn" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="pt">PT</button>
-      </div>
-      <span class="bar-lbl" style="margin-left:8px">Канал</span>
+      <span class="bar-lbl">Канал</span>
       <div class="channel-switch">
         <button class="ch-btn on" data-ch="wa">WhatsApp</button>
         <button class="ch-btn" data-ch="tg">Telegram</button>
@@ -305,7 +299,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
       <div class="scen" data-scen="faq">
         <div class="scen-no">F · Частые вопросы</div>
         <div class="scen-tit">Общие вопросы</div>
-        <div class="scen-tag">Адрес, часы, языки, направления</div>
+        <div class="scen-tag">Адрес, часы, направления</div>
       </div>
       <div class="scen" data-scen="reactivation">
         <div class="scen-no">G · Реактивация</div>
@@ -320,7 +314,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 
       <div class="hint">
         <div class="hint-l">Подсказка</div>
-        <div class="hint-t">Выберите сценарий - бот начнёт диалог и остановится на вашем ходе. Нажимайте предложенные кнопки или пишите свой ответ в поле внизу. Кнопка «Авто-демо» проиграет весь диалог сама. Язык и канал переключаются в любой момент.</div>
+        <div class="hint-t">Выберите сценарий - бот начнёт диалог и остановится на вашем ходе. Нажимайте предложенные кнопки или пишите свой ответ в поле внизу. Кнопка «Авто-демо» проиграет весь диалог сама. Канал переключается в любой момент.</div>
       </div>
     </div>
 
@@ -331,7 +325,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
           <div class="chat-head">
             <div class="avatar">U</div>
             <div class="chat-meta">
-              <div class="chat-name" id="chatName">UMC Lisbon · WhatsApp</div>
+              <div class="chat-name" id="chatName">UMC · WhatsApp</div>
               <div class="chat-stat" id="chatStat">online · ИИ-ассистент</div>
             </div>
             <div class="chat-actions">⋮</div>
@@ -392,27 +386,27 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
         <h4><span class="live-dot"></span>Живая лента</h4>
         <div class="live-item">
           <span class="live-time">11:42</span>
-          <span class="live-text">EN · Запись к GP</span>
+          <span class="live-text">Запись к GP</span>
           <span class="live-flag ok">OK</span>
         </div>
         <div class="live-item">
           <span class="live-time">11:38</span>
-          <span class="live-text">PT · Вопрос про страховку</span>
+          <span class="live-text">Вопрос про страховку</span>
           <span class="live-flag ok">OK</span>
         </div>
         <div class="live-item">
           <span class="live-time">11:31</span>
-          <span class="live-text">RU · Подготовка к УЗИ</span>
+          <span class="live-text">Подготовка к УЗИ</span>
           <span class="live-flag ok">OK</span>
         </div>
         <div class="live-item">
           <span class="live-time">11:24</span>
-          <span class="live-text">EN · Передан врачу</span>
+          <span class="live-text">Передан врачу</span>
           <span class="live-flag alert">HUMAN</span>
         </div>
         <div class="live-item">
           <span class="live-time">11:18</span>
-          <span class="live-text">RU · Новый лид</span>
+          <span class="live-text">Новый лид</span>
           <span class="live-flag new">NEW</span>
         </div>
       </div>
@@ -427,7 +421,7 @@ const SCENARIOS = {
   booking: {
     ru: [
       {who:'user', text:'Добрый день, хочу записаться к терапевту на завтра'},
-      {who:'bot', text:'Здравствуйте! 👋 Я ассистент UMC Lisbon. Подберу свободные слоты к GP на завтра, {date}.'},
+      {who:'bot', text:'Здравствуйте! 👋 Я ассистент UMC. Подберу свободные слоты к GP на завтра, {date}.'},
       {who:'bot', card:'slots', title:'Доступные слоты · GP', slots:['09:30','11:00','14:15','16:45']},
       {who:'user', text:'14:15'},
       {who:'bot', text:'Уточните, пожалуйста, ваше имя и фамилию для записи.'},
@@ -435,7 +429,7 @@ const SCENARIOS = {
       {who:'bot', text:'Спасибо, Анна. Можете указать номер телефона для подтверждения?'},
       {who:'user', text:'+351 912 345 678'},
       {who:'bot', card:'confirm', title:'Запись подтверждена ✓', rows:[
-        ['Врач','Dra. Sofia Pereira · GP'],['Дата','завтра, 14:15'],['Адрес','Av. da Liberdade 123, Lisboa'],['Длительность','30 мин']
+        ['Врач','Dra. Sofia Pereira · GP'],['Дата','завтра, 14:15'],['Адрес','Av. da Liberdade 123'],['Длительность','30 мин']
       ]},
       {who:'bot', text:'Отправлю напоминание за 24 часа и за 2 часа до приёма. До встречи!'}
     ],
@@ -512,7 +506,7 @@ const SCENARIOS = {
       {who:'bot', text:'Отлично! На чьё имя записываем?'},
       {who:'user', text:'Игорь Лебедев'},
       {who:'bot', card:'confirm', title:'Запись на УЗИ подтверждена ✓', rows:[
-        ['Исследование','УЗИ брюшной полости'],['Дата','четверг, 09:00'],['Адрес','Av. da Liberdade 123, Lisboa'],['Подготовка','натощак · памятка выше']
+        ['Исследование','УЗИ брюшной полости'],['Дата','четверг, 09:00'],['Адрес','Av. da Liberdade 123'],['Подготовка','натощак · памятка выше']
       ]},
       {who:'bot', text:'Памятку и напоминание пришлю в этот чат за день до визита. Всё оформил - администратора беспокоить не нужно. Хорошего дня! 🙌'}
     ],
@@ -562,7 +556,7 @@ const SCENARIOS = {
   insurance: {
     ru: [
       {who:'user', text:'Покрывает ли Médis анализы крови?'},
-      {who:'bot', text:'Сейчас проверю по правилам Médis для UMC Lisbon...'},
+      {who:'bot', text:'Сейчас проверю по правилам Médis для UMC...'},
       {who:'bot', card:'ins', title:'Médis · покрытие', rows:[
         ['Общий анализ крови','✓ 80% покрытия'],
         ['Биохимия','✓ 80% покрытия'],
@@ -604,7 +598,7 @@ const SCENARIOS = {
     ru: [
       {who:'bot', text:'Здравствуйте, Анна! 👋'},
       {who:'bot', card:'reminder', title:'Напоминание · завтра', rows:[
-        ['Приём','Dra. Sofia Pereira · GP'],['Время','14:15'],['Адрес','Av. da Liberdade 123, Lisboa'],['Парковка','подземная, въезд с Rua Rosa Araújo']
+        ['Приём','Dra. Sofia Pereira · GP'],['Время','14:15'],['Адрес','Av. da Liberdade 123'],['Парковка','подземная, въезд с Rua Rosa Araújo']
       ]},
       {who:'bot', text:'Подтверждаете запись или нужно перенести?'},
       {who:'bot', quick:['✓ Подтверждаю','Перенести','Отменить']},
@@ -638,11 +632,9 @@ const SCENARIOS = {
   faq: {
     ru: [
       {who:'user', text:'Где вы находитесь и как добраться?'},
-      {who:'bot', text:'UMC Lisbon - Av. da Liberdade 123, Лиссабон. Метро Avenida (синяя линия), 2 минуты пешком. Есть подземная парковка с въездом с Rua Rosa Araújo.'},
+      {who:'bot', text:'UMC - Av. da Liberdade 123. Метро Avenida (синяя линия), 2 минуты пешком. Есть подземная парковка с въездом с Rua Rosa Araújo.'},
       {who:'user', text:'А какие у вас часы работы?'},
       {who:'bot', text:'Клиника принимает Пн-Пт 08:00-20:00, Сб 09:00-15:00. Я, ассистент, на связи и помогаю с записью 24/7.'},
-      {who:'user', text:'На каких языках вы принимаете?'},
-      {who:'bot', text:'Наши врачи и я общаемся на английском, португальском и русском - пишите на любом удобном языке.'},
       {who:'user', text:'Нужно ли направление, чтобы попасть к специалисту?'},
       {who:'bot', text:'К большинству специалистов можно записаться напрямую, без направления. Для части анализов по страховке направление от GP нужно - подскажу по вашему конкретному случаю.'},
       {who:'bot', text:'Могу подсказать по ценам и страховке или сразу записать на приём. Что для вас удобнее?'},
@@ -675,7 +667,7 @@ const SCENARIOS = {
   },
   reactivation: {
     ru: [
-      {who:'bot', text:'Добрый день, Мария! 👋 Это ассистент UMC Lisbon.'},
+      {who:'bot', text:'Добрый день, Мария! 👋 Это ассистент UMC.'},
       {who:'bot', text:'Вижу, что вы были у нас на приёме у кардиолога около года назад. Самое время для планового контроля - так проще не пропустить важное.'},
       {who:'bot', card:'react', title:'Рекомендованный контроль', rows:[
         ['Последний визит','~12 месяцев назад'],['Специалист','Кардиолог'],['Рекомендация','ежегодный осмотр + ЭКГ'],['Ваша скидка','-15% на контрольный приём']
@@ -785,9 +777,9 @@ const SCENARIOS = {
 };
 
 const CHANNEL_LABELS = {
-  ru: {wa:['UMC Lisbon · WhatsApp','online · ИИ-ассистент'],
-       tg:['UMC Lisbon · Telegram','bot · ИИ-ассистент'],
-       web:['UMC Lisbon · Чат на сайте','онлайн · обычно отвечает за 5 сек']},
+  ru: {wa:['UMC · WhatsApp','online · ИИ-ассистент'],
+       tg:['UMC · Telegram','bot · ИИ-ассистент'],
+       web:['UMC · Чат на сайте','онлайн · обычно отвечает за 5 сек']},
   en: {wa:['UMC Lisbon · WhatsApp','online · AI assistant'],
        tg:['UMC Lisbon · Telegram','bot · AI assistant'],
        web:['UMC Lisbon · Website chat','online · usually replies in 5 sec']},
@@ -797,7 +789,7 @@ const CHANNEL_LABELS = {
 };
 
 const WELCOME = {
-  ru:'Здравствуйте! 👋 Я ИИ-ассистент UMC Lisbon. Чем могу помочь? Выберите тему ниже или просто напишите свой вопрос.',
+  ru:'Здравствуйте! 👋 Я ИИ-ассистент UMC. Чем могу помочь? Выберите тему ниже или просто напишите свой вопрос.',
   en:'Hello! 👋 I am the UMC Lisbon AI assistant. How can I help? Pick a topic below or just type your question.',
   pt:'Olá! 👋 Sou o assistente IA da UMC Lisbon. Como posso ajudar? Escolha um tema abaixo ou escreva a sua pergunta.'
 };
@@ -1161,7 +1153,7 @@ function fakeReply(t){
       en:'Clinic hours: Mon-Fri 08:00-20:00, Sat 09:00-15:00. The bot is available 24/7.',
       pt:'Horário: Seg-Sex 08:00-20:00, Sáb 09:00-15:00. O bot está disponível 24/7.'}[L];
   if(has('адрес','address','morada','где'))
-    return {ru:'UMC Lisbon - Av. da Liberdade 123, Лиссабон. Метро Avenida (синяя линия), 2 мин пешком.',
+    return {ru:'UMC - Av. da Liberdade 123. Метро Avenida (синяя линия), 2 мин пешком.',
       en:'UMC Lisbon · Av. da Liberdade 123, Lisbon. Metro Avenida (blue line), 2 min walk.',
       pt:'UMC Lisbon · Av. da Liberdade 123, Lisboa. Metro Avenida (linha azul), a 2 min a pé.'}[L];
   return {ru:'Понял ваш вопрос. Передам администратору - он ответит в течение часа. Или попробуйте один из сценариев слева.',
@@ -1222,17 +1214,6 @@ function menuPick(scen){
   startManual();
 }
 
-document.querySelectorAll('.lang-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    document.querySelectorAll('.lang-btn').forEach(x => x.classList.remove('on'));
-    b.classList.add('on');
-    state.lang = b.dataset.lang;
-    updateChannelLabels();
-    if(state.mode === 'auto') playScenario();
-    else if(state.mode === 'idle'){ clearChat(); showWelcome(); }
-    else startManual();
-  });
-});
 document.querySelectorAll('.ch-btn').forEach(b => {
   b.addEventListener('click', () => {
     document.querySelectorAll('.ch-btn').forEach(x => x.classList.remove('on'));
